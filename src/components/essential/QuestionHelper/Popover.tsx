@@ -8,10 +8,10 @@ import Portal from '@reach/portal'
 const PopoverContainer = styled('div')(({ theme }) => ({
   zIndex: 9999,
   transition: 'visibility 150ms linear, opacity 150ms linear',
-  background: theme.bgColor.bg2,
-  border: '1px solid ' + theme.bgColor.bg3,
-  boxShadow: '0 4px 8px 0 ' + theme.bgColor.bg2,
-  color: theme.textColor.text2,
+  background: '#424242',
+  border: '1px solid #424242',
+  boxShadow: '0 4px 8px 0 #424242',
+  color: theme.palette.primary.contrastText,
   borderRadius: ' 8px'
 }))
 
@@ -19,7 +19,7 @@ const ReferenceElement = styled('div')({
   display: 'inline-block'
 })
 
-const Arrow = styled('div')(({ theme }) => ({
+const Arrow = styled('div')(({}) => ({
   width: '8px',
   height: '8px',
   zIndex: 9998,
@@ -28,10 +28,10 @@ const Arrow = styled('div')(({ theme }) => ({
     width: '8px',
     height: '8px',
     zIndex: 9998,
-    content: '',
-    border: '1px solid ' + theme.bgColor.bg3,
+    content: "''",
+    border: '1px solid #424242',
     transform: 'rotate(45deg)',
-    background: theme.bgColor.bg2
+    background: '#424242'
   },
   '&.arrow-top': {
     bottom: '-5px',

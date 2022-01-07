@@ -8,6 +8,7 @@ export enum ChainId {
   RINKEBY = 4,
   GÖRLI = 5,
   KOVAN = 42
+  // BSC = 56
 }
 
 export const ChainList = [
@@ -35,6 +36,14 @@ export const ChainList = [
     id: ChainId.KOVAN,
     hex: '0x2a'
   }
+  // {
+  //   icon: <BSCInvert height={20} width={20} />,
+  //   logo: BSCUrl,
+  //   symbol: 'BSC',
+  //   name: 'Binance Smart Chain',
+  //   id: ChainId.BSC,
+  //   hex: '0x38'
+  // }
 ]
 
 export const ChainListMap: {
@@ -101,4 +110,15 @@ export const SUPPORTED_NETWORKS: {
     rpcUrls: ['https://kovan.infura.io/v3/'],
     blockExplorerUrls: ['https://kovan.etherscan.io/']
   }
+  // [ChainId.BSC]: {
+  //   chainId: '0x38',
+  //   chainName: 'Binance Smart Chain',
+  //   nativeCurrency: {
+  //     name: 'Binance Coin',
+  //     symbol: 'BNB',
+  //     decimals: 18
+  //   },
+  //   rpcUrls: ['https://bsc-dataseed.binance.org'],
+  //   blockExplorerUrls: ['https://bscscan.com']
+  // }
 }
