@@ -2,7 +2,7 @@ import { InputHTMLAttributes, useCallback } from 'react'
 import { Box } from '@mui/material'
 import Input, { InputProps } from './index'
 import { escapeRegExp } from 'utils'
-import SmallButton from 'components/Button/SmallButton'
+import SecondaryButton from 'components/Button/SecondaryButton'
 import InputLabel from './InputLabel'
 
 const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`) // match escaped "." characters via in a non-capturing group
@@ -15,8 +15,18 @@ export default function NumericalInput({
   balance,
   label,
   unit,
+  endAdornment,
+  subStr,
   ...props
-}: InputProps & InputHTMLAttributes<HTMLInputElement> & { onMax?: () => void; balance?: string; unit?: string }) {
+}: InputProps &
+  InputHTMLAttributes<HTMLInputElement> & {
+    onMax?: () => void
+    balance?: string
+    unit?: string
+    endAdornment?: JSX.Element
+    onDeposit?: () => void
+    subStr?: string
+  }) {
   const enforcer = (nextUserInput: string) => {
     const fixed = nextUserInput.replace(/,/g, '.')
     if (fixed === '' || inputRegex.test(escapeRegExp(fixed))) {
@@ -42,11 +52,13 @@ export default function NumericalInput({
       {(label || balance) && (
         <Box display="flex" justifyContent="space-between">
           <InputLabel>{label}</InputLabel>
-          {!!balance && (
-            <InputLabel>
-              Available: {balance} {unit ?? 'MATTER'}
-            </InputLabel>
-          )}
+          <Box display="flex" alignItems="baseline">
+            {!!balance && (
+              <InputLabel style={{ fontSize: '12px' }}>
+                Available: {balance} {unit ?? 'MATTER'}
+              </InputLabel>
+            )}
+          </Box>
         </Box>
       )}
       <Input
@@ -66,11 +78,23 @@ export default function NumericalInput({
         spellCheck="false"
         endAdornment={
           onMax && (
-            <Box gap="20px" display="flex" alignItems="center" paddingLeft="20px" paddingBottom="2px">
-              <SmallButton onClick={onMax}>MAX</SmallButton>
+            <Box gap="20px" display="flex" alignItems="center" paddingLeft="10px" paddingBottom="2px">
+              {endAdornment ? endAdornment : unit && <span>{unit ?? 'MATTER'}</span>}
+              <SecondaryButton
+                disabled={props.disabled === true ? true : false}
+                primary
+                onClick={onMax}
+                style={{
+                  width: '60px',
+                  height: '32px'
+                }}
+              >
+                MAX
+              </SecondaryButton>
             </Box>
           )
         }
+        subStr={subStr}
       />
     </Box>
   )
