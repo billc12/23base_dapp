@@ -1,6 +1,6 @@
 {
-  "name": "@chainswap/interface",
-  "description": "Chainswap Interface",
+  "name": "interface",
+  "description": "Interface",
   "homepage": ".",
   "private": true,
   "devDependencies": {
@@ -103,6 +103,7 @@
     "@mui/material": "^5.0.6",
     "axios": "^0.24.0",
     "big.js": "^6.1.1",
+    "dayjs": "^1.10.7",
     "decimal.js-light": "^2.5.1",
     "jsbi": "^4.0.0",
     "toformat": "^2.0.0"

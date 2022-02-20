@@ -74,7 +74,7 @@ export default function Modal(props: Props) {
                     maxWidth: 'unset!important',
                     maxHeight: 'unset',
                     height: `calc(100vh - ${theme.height.mobileHeader} - ${theme.height.header})`,
-                    margin: theme.height.header,
+                    margin: `auto`,
                     borderRadius: '20px 20px 0 0'
                   }
                 }
