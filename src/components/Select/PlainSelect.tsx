@@ -9,6 +9,26 @@ interface Props {
   style?: React.CSSProperties
 }
 
+// const StyledSelect = styled(MuiSelect, { shouldForwardProp: () => true })<{ width?: string }>(({ theme, width }) => ({
+//   backgroundColor: 'transparent',
+//   cursor: 'pointer',
+//   width: width ?? '62px',
+//   position: 'relative',
+//   border: 'none',
+//   color: theme.palette.text.primary,
+//   opacity: 0.5,
+
+//   // '&.Mui-focused': {
+//   //   backgroundColor: 'transparent'
+//   // },
+//   '&:hover': {
+//     opacity: 1
+//   },
+//   '&.Mui-focused': {
+//     opacity: 1
+//   }
+// }))
+
 export default function Select(props: Props) {
   const { children, placeholder, autoFocus, style } = props
 
@@ -34,7 +54,6 @@ export default function Select(props: Props) {
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
         sx={{
-          height: '14px',
           borderRadius: 0,
           padding: 0,
           color: theme => theme.palette.text.primary,
@@ -104,7 +123,23 @@ export default function Select(props: Props) {
           }
         }}
         autoFocus={autoFocus}
+        // autoWidth
         placeholder={placeholder}
+        // MenuProps={{
+
+        //   },
+        //   anchorOrigin: {
+        //     vertical: 'bottom',
+        //     horizontal: 'left'
+        //   },
+        //   transformOrigin: {
+        //     vertical: 'top',
+        //     horizontal: 'left'
+        //   }
+        // }}
+        // IconComponent={ExpandMoreIcon}
+        // input={<InputBase sx={{ paddingRight: '0px' }} />}
+        // renderValue={() => ''}
       >
         {children}
       </Menu>

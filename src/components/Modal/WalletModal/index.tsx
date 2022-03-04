@@ -18,6 +18,8 @@ import Option from './Option'
 import PendingView from './PendingView'
 import OutlineButton from 'components/Button/OutlineButton'
 import useBreakpoint from 'hooks/useBreakpoint'
+import Button from '../../Button/Button'
+import { ChainId, NETWORK_CHAIN_ID, SUPPORTED_NETWORKS } from '../../../constants/chain'
 
 const WALLET_VIEWS = {
   OPTIONS: 'options',
@@ -75,19 +77,21 @@ export default function WalletModal({
   }, [setWalletView, active, error, connector, walletModalOpen, activePrevious, connectorPrevious])
 
   const tryActivation = useCallback(
-    async (connector: AbstractConnector | undefined) => {
-      setPendingWallet(connector) // set wallet for pending view
+    async (connector: (() => Promise<AbstractConnector>) | AbstractConnector | undefined) => {
+      const conn = typeof connector === 'function' ? await connector() : connector
+
+      setPendingWallet(conn) // set wallet for pending view
       setWalletView(WALLET_VIEWS.PENDING)
 
       // if the connector is walletconnect and the user has already tried to connect, manually reset the connector
-      if (connector instanceof WalletConnectConnector && connector.walletConnectProvider?.wc?.uri) {
-        connector.walletConnectProvider = undefined
+      if (conn instanceof WalletConnectConnector && conn.walletConnectProvider?.wc?.uri) {
+        conn.walletConnectProvider = undefined
       }
 
-      connector &&
-        activate(connector, undefined, true).catch(error => {
+      conn &&
+        activate(conn, undefined, true).catch(error => {
           if (error instanceof UnsupportedChainIdError) {
-            activate(connector) // a little janky...can't use setError because the connector isn't set
+            activate(conn) // a little janky...can't use setError because the connector isn't set
           } else {
             setPendingError(true)
           }
@@ -192,9 +196,33 @@ export default function WalletModal({
           </Typography>
           <Box padding={isUpToMD ? '16px' : '2rem 6rem 52px'}>
             {error instanceof UnsupportedChainIdError
-              ? 'Please connect to the appropriate Ethereum network.'
+              ? `Please connect to the    ${
+                  SUPPORTED_NETWORKS[NETWORK_CHAIN_ID]
+                    ? SUPPORTED_NETWORKS[NETWORK_CHAIN_ID]?.chainName
+                    : 'Binance Smart Chain'
+                }.`
               : 'Error connecting. Try refreshing the page.'}
           </Box>
+          {window.ethereum && window.ethereum.isMetaMask && (
+            <Button
+              onClick={() => {
+                const id = Object.values(ChainId).find(val => val === NETWORK_CHAIN_ID)
+                if (!id) {
+                  return
+                }
+                const params = SUPPORTED_NETWORKS[id as ChainId]
+                params?.nativeCurrency.symbol === 'ETH'
+                  ? window.ethereum?.request?.({
+                      method: 'wallet_switchEthereumChain',
+                      params: [{ chainId: params.chainId }, account]
+                    })
+                  : window.ethereum?.request?.({ method: 'wallet_addEthereumChain', params: [params, account] })
+              }}
+            >
+              Connect to{' '}
+              {SUPPORTED_NETWORKS[NETWORK_CHAIN_ID] ? SUPPORTED_NETWORKS[NETWORK_CHAIN_ID]?.chainName : 'BSC'}
+            </Button>
+          )}
         </>
       )
     }

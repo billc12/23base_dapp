@@ -1,13 +1,15 @@
-import { NavLink } from 'react-router-dom'
-import { Typography, useTheme, AppBar, Box, MenuItem, styled as muiStyled, styled } from '@mui/material'
+import { useState, useCallback } from 'react'
+import { NavLink, useLocation } from 'react-router-dom'
+import { AppBar, Box, IconButton, MenuItem, styled as muiStyled, styled } from '@mui/material'
 import { ExternalLink } from 'theme/components'
 import Web3Status from './Web3Status'
-import { HideOnMobile } from 'theme/index'
+import { HideOnMobile, ShowOnMobile } from 'theme/index'
 import PlainSelect from 'components/Select/PlainSelect'
 import Image from 'components/Image'
-import ChainSwap from '../../assets/svg/chain_swap.svg'
+import antimatter from '../../assets/svg/chain_swap.svg'
 import { routes } from 'constants/routes'
-import MobileHeader from './MobileHeader'
+import MobileMenu from './MobileMenu'
+import NetworkSelect from './NetworkSelect'
 
 interface TabContent {
   title: string
@@ -21,140 +23,242 @@ interface Tab extends TabContent {
 }
 
 export const Tabs: Tab[] = [
-  { title: 'Test1', route: routes.test1 },
-  { title: 'Test2', route: routes.test2 },
-  { title: 'Test3', route: routes.test3 },
-  { title: 'Test4', link: 'https://www.google.com/' },
   {
-    title: 'About',
+    title: 'Test',
     subTab: [
-      { title: 'About1', link: 'https://www.google.com/' },
-      { title: 'About2', link: 'https://www.google.com/' },
-      {
-        title: 'faq',
-        titleContent: <FAQButton />,
-        route: 'faq'
-      }
+      { title: 'Test1', route: routes.test1 },
+      { title: 'Test2', route: routes.test2 }
     ]
-  }
+  },
+
+  { title: 'Test3', route: routes.test3 },
+  { title: 'DAO', link: 'https://dao.antimatter.finance/#/' },
+  { title: 'Docs', link: 'https://docs.antimatter.finance/' }
 ]
+
+const navLinkSX = ({ theme }: any) => ({
+  textDecoration: 'none',
+  fontSize: 14,
+  color: theme.palette.text.primary,
+  opacity: 0.5,
+  '&:hover': {
+    opacity: 1
+  }
+})
+
+const StyledNavLink = styled(NavLink)(navLinkSX)
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   position: 'relative',
   height: theme.height.header,
-  borderBottom: '1px solid #00000020',
-  backgroundColor: theme.palette.background.default,
+  backgroundColor: theme.palette.background.paper,
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'space-between',
   boxShadow: 'none',
-  padding: '0 60px 00 40px',
-  [theme.breakpoints.down('md')]: {
-    position: 'fixed',
-    bottom: 0,
-    left: 0,
-    top: 'unset',
-    borderTop: '1px solid ' + theme.bgColor.bg4,
-    justifyContent: 'center'
-  },
+  padding: '0 40px 0 25px!important',
+  zIndex: theme.zIndex.drawer,
+  borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+  // [theme.breakpoints.down('md')]: {
+  //   position: 'fixed',
+  //   bottom: 0,
+  //   left: 0,
+  //   top: 'unset',
+  //   borderTop: '1px solid ' + theme.bgColor.bg4,
+  //   justifyContent: 'center'
+  // },
   '& .link': {
     textDecoration: 'none',
     fontSize: 14,
     color: theme.palette.text.primary,
     opacity: 0.5,
-    marginRight: 28,
+    marginRight: 48,
+    paddingBottom: '30px',
+    borderBottom: '2px solid transparent',
     '&.active': {
-      opacity: 1
+      opacity: 1,
+      borderColor: theme.palette.text.primary
     },
     '&:hover': {
       opacity: 1
     }
+  },
+  [theme.breakpoints.down('lg')]: {
+    '& .link': { marginRight: 15 },
+    padding: '0 24px 0 0!important'
+  },
+  [theme.breakpoints.down('md')]: {
+    position: 'fixed'
+  },
+  [theme.breakpoints.down('sm')]: {
+    height: theme.height.mobileHeader,
+    padding: '0 20px!important'
   }
 }))
 
-const MainLogo = styled(NavLink)({
+const Filler = styled('div')(({ theme }) => ({
+  display: 'none',
+  [theme.breakpoints.down('md')]: {
+    height: theme.height.header,
+    display: 'block'
+  },
+  [theme.breakpoints.down('sm')]: {
+    height: theme.height.mobileHeader,
+    padding: '0 20px'
+  }
+}))
+
+const MainLogo = styled(NavLink)(({ theme }) => ({
   '& img': {
     width: 180.8,
     height: 34.7
   },
   '&:hover': {
     cursor: 'pointer'
+  },
+  [theme.breakpoints.down('sm')]: {
+    '& img': { width: 100, height: 'auto' },
+    marginBottom: -10
   }
-})
+}))
 
-const LinksWrapper = muiStyled('div')({
-  marginLeft: 60.2
-})
+const LinksWrapper = muiStyled('div')(({ theme }) => ({
+  marginLeft: 60,
+  [theme.breakpoints.down('lg')]: {
+    marginLeft: 0
+  }
+}))
 
 export default function Header() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { pathname } = useLocation()
+
+  const handleMobileMenueDismiss = useCallback(() => {
+    setMobileMenuOpen(false)
+  }, [])
+
   return (
     <>
-      <MobileHeader />
+      <MobileMenu isOpen={mobileMenuOpen} onDismiss={handleMobileMenueDismiss} />
+      <Filler />
       <StyledAppBar>
-        <HideOnMobile breakpoint="md">
-          <Box display="flex" alignItems="center">
-            <MainLogo id={'chainswap'} to={'/'}>
-              <Image src={ChainSwap} alt={'chainswap'} />
-            </MainLogo>
+        <Box display="flex" alignItems="center">
+          <MainLogo id={'antimatter'} to={'/'}>
+            <Image src={antimatter} alt={'antimatter'} />
+          </MainLogo>
+          <HideOnMobile breakpoint="md">
             <LinksWrapper>
               {Tabs.map(({ title, route, subTab, link, titleContent }, idx) =>
                 subTab ? (
-                  <PlainSelect placeholder={title} key={title + idx}>
-                    {subTab.map((sub, idx) =>
-                      sub.link ? (
-                        <MenuItem key={sub.link + idx}>
-                          <ExternalLink href={sub.link} className={'link'}>
-                            {sub.titleContent ?? sub.title}
-                          </ExternalLink>
-                        </MenuItem>
-                      ) : (
-                        <MenuItem key={sub.title + idx}>
-                          <NavLink to={sub.route ?? ''} className={'link'}>
-                            {sub.titleContent ?? sub.title}
-                          </NavLink>
-                        </MenuItem>
-                      )
-                    )}
-                  </PlainSelect>
+                  <Box
+                    sx={{
+                      marginRight: {
+                        xs: 15,
+                        lg: 48
+                      },
+                      height: 'auto',
+                      paddingBottom: '30px',
+                      borderBottom: '2px solid transparent',
+                      borderColor: theme =>
+                        subTab.some(tab => tab.route && pathname.includes(tab.route))
+                          ? theme.palette.text.primary
+                          : 'transparnet',
+                      display: 'inline'
+                    }}
+                    key={title + idx}
+                  >
+                    <PlainSelect
+                      key={title + idx}
+                      placeholder={title}
+                      autoFocus={false}
+                      width={title === 'Test' ? '70px' : undefined}
+                      style={{
+                        height: '16px'
+                      }}
+                    >
+                      {subTab.map((sub, idx) =>
+                        sub.link ? (
+                          <MenuItem
+                            key={sub.link + idx}
+                            sx={{ backgroundColor: 'transparent!important', background: 'transparent!important' }}
+                            selected={false}
+                          >
+                            <ExternalLink
+                              href={sub.link}
+                              className={'link'}
+                              color="#00000050"
+                              sx={{
+                                '&:hover': {
+                                  color: '#232323!important'
+                                }
+                              }}
+                            >
+                              {sub.titleContent ?? sub.title}
+                            </ExternalLink>
+                          </MenuItem>
+                        ) : (
+                          <MenuItem key={sub.title + idx}>
+                            <StyledNavLink to={sub.route ?? ''}>{sub.titleContent ?? sub.title}</StyledNavLink>
+                          </MenuItem>
+                        )
+                      )}
+                    </PlainSelect>
+                  </Box>
                 ) : link ? (
-                  <ExternalLink href={link} className={'link'} key={link + idx}>
+                  <ExternalLink href={link} className={'link'} key={link + idx} style={{ fontSize: 14 }}>
                     {titleContent ?? title}
                   </ExternalLink>
                 ) : (
-                  <NavLink key={title + idx} id={`${route}-nav-link`} to={route ?? ''} className={'link'}>
+                  <NavLink
+                    key={title + idx}
+                    id={`${route}-nav-link`}
+                    to={route ?? ''}
+                    className={
+                      (route
+                        ? pathname.includes(route)
+                          ? 'active'
+                          : pathname.includes('account')
+                          ? route.includes('account')
+                            ? 'active'
+                            : ''
+                          : ''
+                        : '') + ' link'
+                    }
+                  >
                     {titleContent ?? title}
                   </NavLink>
                 )
               )}
             </LinksWrapper>
-          </Box>
-        </HideOnMobile>
-        <Web3Status />
+          </HideOnMobile>
+        </Box>
+
+        <Box display="flex" alignItems="center" gap={{ xs: '6px', sm: '20px' }}>
+          <NetworkSelect />
+          <Web3Status />
+          <ShowOnMobile breakpoint="md">
+            <IconButton
+              sx={{
+                border: '1px solid rgba(0, 0, 0, 0.1)',
+                height: { xs: 24, sm: 32 },
+                width: { xs: 24, sm: 32 },
+                mb: { xs: 0, sm: 15 },
+                mt: { xs: 0, sm: 8 },
+                padding: '4px',
+                borderRadius: '8px'
+              }}
+              onClick={() => {
+                setMobileMenuOpen(open => !open)
+              }}
+            >
+              <svg width="14" height="8" viewBox="0 0 14 8" fill="none" stroke="#252525">
+                <path d="M1 1H13" strokeWidth="1.4" strokeLinecap="round" />
+                <path d="M1 7H13" strokeWidth="1.4" strokeLinecap="round" />
+              </svg>
+            </IconButton>
+          </ShowOnMobile>
+        </Box>
       </StyledAppBar>
     </>
-  )
-}
-
-function FAQButton() {
-  const theme = useTheme()
-  return (
-    <Box display="flex" alignItems="center" justifyContent="center">
-      <span
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          borderRadius: '50%',
-          border: `1px solid ${theme.palette.success.main}`,
-          width: '18px',
-          height: '18px',
-          marginRight: '12px',
-          color: theme.palette.success.main
-        }}
-      >
-        <Typography variant="body1">?</Typography>
-      </span>
-      FAQ
-    </Box>
   )
 }

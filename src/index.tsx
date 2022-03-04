@@ -17,10 +17,6 @@ import TransactionUpdater from './state/transactions/updater'
 import getLibrary from './utils/getLibrary'
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
-if (!!window.ethereum) {
-  window.ethereum.autoRefreshOnNetworkChange = false
-}
-
 function Updaters() {
   return (
     <>

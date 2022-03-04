@@ -1,15 +1,23 @@
 import { Chain } from 'models/chain'
 import { ReactComponent as ETH } from 'assets/svg/eth_logo.svg'
 import EthUrl from 'assets/svg/eth_logo.svg'
+import BSCUrl from 'assets/svg/binance.svg'
+import { ReactComponent as BSC } from 'assets/svg/binance.svg'
 
 export enum ChainId {
   MAINNET = 1,
   ROPSTEN = 3,
   RINKEBY = 4,
   GÖRLI = 5,
-  KOVAN = 42
-  // BSC = 56
+  KOVAN = 42,
+  BSC = 56
 }
+
+export const NETWORK_CHAIN_ID: ChainId = process.env.REACT_APP_CHAIN_ID
+  ? parseInt(process.env.REACT_APP_CHAIN_ID)
+  : ChainId.BSC
+
+export const IS_TEST_NET = !!(NETWORK_CHAIN_ID === ChainId.ROPSTEN)
 
 export const ChainList = [
   {
@@ -35,15 +43,15 @@ export const ChainList = [
     name: 'Kovan Testnet',
     id: ChainId.KOVAN,
     hex: '0x2a'
+  },
+  {
+    icon: <BSC height={20} width={20} />,
+    logo: BSCUrl,
+    symbol: 'BSC',
+    name: 'Binance Smart Chain',
+    id: ChainId.BSC,
+    hex: '0x38'
   }
-  // {
-  //   icon: <BSCInvert height={20} width={20} />,
-  //   logo: BSCUrl,
-  //   symbol: 'BSC',
-  //   name: 'Binance Smart Chain',
-  //   id: ChainId.BSC,
-  //   hex: '0x38'
-  // }
 ]
 
 export const ChainListMap: {
