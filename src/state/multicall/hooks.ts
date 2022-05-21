@@ -1,6 +1,7 @@
 import { Interface, FunctionFragment } from '@ethersproject/abi'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
+import { ZERO_ADDRESS } from '../../constants'
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks'
@@ -168,7 +169,7 @@ export function useSingleContractMultipleData(
 
   const calls = useMemo(
     () =>
-      contract && fragment && callInputs && callInputs.length > 0
+      contract && contract.address !== ZERO_ADDRESS && fragment && callInputs && callInputs.length > 0
         ? callInputs.map<Call>(inputs => {
             return {
               address: contract.address,
@@ -208,7 +209,7 @@ export function useMultipleContractSingleData(
     () =>
       fragment && addresses && addresses.length > 0 && callData
         ? addresses.map<Call | undefined>(address => {
-            return address && callData
+            return address && address !== ZERO_ADDRESS && callData
               ? {
                   address,
                   callData
@@ -237,7 +238,7 @@ export function useSingleCallResult(
   const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [contract, methodName])
 
   const calls = useMemo<Call[]>(() => {
-    return contract && fragment && isValidMethodArgs(inputs)
+    return contract && contract.address !== ZERO_ADDRESS && fragment && isValidMethodArgs(inputs)
       ? [
           {
             address: contract.address,
