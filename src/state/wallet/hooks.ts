@@ -1,13 +1,20 @@
 import { useMemo } from 'react'
 import ERC20_INTERFACE from '../../constants/abis/erc20'
 import { useActiveWeb3React } from '../../hooks'
-import { useMulticallContract } from '../../hooks/useContract'
+import { useBytes32TokenContract, useMulticallContract, useTokenContract } from '../../hooks/useContract'
 import { isAddress } from '../../utils'
-import { useSingleContractMultipleData, useMultipleContractSingleData } from '../multicall/hooks'
+import {
+  useSingleContractMultipleData,
+  useMultipleContractSingleData,
+  NEVER_RELOAD,
+  useSingleCallResult
+} from '../multicall/hooks'
 import { CurrencyAmount, TokenAmount } from '../../constants/token/fractions'
 import JSBI from 'jsbi'
 import { Currency, ETHER, Token } from '../../constants/token'
 import { BAST_TOKEN } from '../../constants'
+import { ChainId } from 'constants/chain'
+import { arrayify, parseBytes32String } from 'ethers/lib/utils'
 
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.
@@ -124,15 +131,68 @@ export function useCurrencyBalance(account?: string, currency?: Currency): Curre
   return useCurrencyBalances(account, [currency])[0]
 }
 
-// get the total owned, unclaimed, and unharvested UNI for account
-export function useAggregateUniBalance(): TokenAmount | undefined {
+export function useBaseTokenBalance(): TokenAmount | undefined {
   const { account, chainId } = useActiveWeb3React()
 
-  const uni = chainId ? BAST_TOKEN[chainId] : undefined
+  const base = chainId ? BAST_TOKEN[chainId] : undefined
 
-  const uniBalance: TokenAmount | undefined = useTokenBalance(account ?? undefined, uni)
+  const baseBalance: TokenAmount | undefined = useTokenBalance(account ?? undefined, base)
 
-  if (!uni) return undefined
+  if (!base) return undefined
 
-  return uniBalance
+  return baseBalance
+}
+
+// parse a name or symbol from a token response
+const BYTES32_REGEX = /^0x[a-fA-F0-9]{64}$/
+
+function parseStringOrBytes32(str: string | undefined, bytes32: string | undefined, defaultValue: string): string {
+  return str && str.length > 0
+    ? str
+    : // need to check for proper bytes string and valid terminator
+    bytes32 && BYTES32_REGEX.test(bytes32) && arrayify(bytes32)[31] === 0
+    ? parseBytes32String(bytes32)
+    : defaultValue
+}
+
+export function useToken(tokenAddress: string, chainId?: ChainId): Token | undefined | null {
+  const { chainId: linkChainId } = useActiveWeb3React()
+  const curChainId = chainId || linkChainId
+
+  const address = isAddress(tokenAddress)
+
+  const tokenContract = useTokenContract(address ? address : undefined, false)
+  const tokenContractBytes32 = useBytes32TokenContract(address ? address : undefined, false)
+
+  const tokenName = useSingleCallResult(tokenContract, 'name', undefined, NEVER_RELOAD, curChainId)
+  const tokenNameBytes32 = useSingleCallResult(tokenContractBytes32, 'name', undefined, NEVER_RELOAD, curChainId)
+  const symbol = useSingleCallResult(tokenContract, 'symbol', undefined, NEVER_RELOAD, curChainId)
+  const symbolBytes32 = useSingleCallResult(tokenContractBytes32, 'symbol', undefined, NEVER_RELOAD, curChainId)
+  const decimals = useSingleCallResult(tokenContract, 'decimals', undefined, NEVER_RELOAD, curChainId)
+
+  return useMemo(() => {
+    if (!curChainId || !address) return undefined
+    if (decimals.loading || symbol.loading || tokenName.loading) return null
+    if (decimals.result) {
+      return new Token(
+        curChainId,
+        address,
+        decimals.result[0],
+        parseStringOrBytes32(symbol.result?.[0], symbolBytes32.result?.[0], 'UNKNOWN'),
+        parseStringOrBytes32(tokenName.result?.[0], tokenNameBytes32.result?.[0], 'Unknown Token')
+      )
+    }
+    return undefined
+  }, [
+    address,
+    curChainId,
+    decimals.loading,
+    decimals.result,
+    symbol.loading,
+    symbol.result,
+    symbolBytes32.result,
+    tokenName.loading,
+    tokenName.result,
+    tokenNameBytes32.result
+  ])
 }

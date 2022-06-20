@@ -10,6 +10,7 @@ import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
 import { ChainId } from '../constants/chain'
+import { getOtherNetworkLibrary } from 'connectors/MultiNetworkConnector'
 
 // returns null on errors
 function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
@@ -58,9 +59,20 @@ export function useBytes32TokenContract(tokenAddress?: string, withSignerIfPossi
   return useContract(tokenAddress, ERC20_BYTES32_ABI, withSignerIfPossible)
 }
 
-export function useMulticallContract(): Contract | null {
+export function useMulticallContract(queryChainId?: ChainId): Contract | null {
   const { chainId } = useActiveWeb3React()
-  return useContract(chainId && MULTICALL_NETWORKS[chainId], MULTICALL_ABI, false)
+  const curChainId = useMemo(() => queryChainId || chainId, [chainId, queryChainId])
+  return useMemo(() => {
+    if (!curChainId) return null
+    const library = getOtherNetworkLibrary(curChainId)
+    if (!library) return null
+    try {
+      return getContract(MULTICALL_NETWORKS[curChainId], MULTICALL_ABI, library, undefined)
+    } catch (error) {
+      console.error('Failed to get contract', error)
+      return null
+    }
+  }, [curChainId])
 }
 
 export function useSocksController(): Contract | null {
