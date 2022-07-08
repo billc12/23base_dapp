@@ -76,7 +76,7 @@ export default function AccountDetails({
           justifyContent="center"
           alignItems="center"
           marginBottom="20px"
-          color={theme.textColor.text3}
+          color={theme.palette.text.secondary}
         >
           {formatConnectorName()}
           {connector !== injected && connector !== walletlink && (
@@ -107,7 +107,7 @@ export default function AccountDetails({
           {ENSName ? <span> {ENSName}</span> : <span> {account && shortenAddress(account)}</span>}
         </Box>
 
-        <Box display="flex" justifyContent="center" width="100%" color={theme.textColor.text3}>
+        <Box display="flex" justifyContent="center" width="100%" color={theme.palette.text.secondary}>
           {account && (
             <Copy toCopy={account}>
               <Typography variant="body2">Copy Address</Typography>

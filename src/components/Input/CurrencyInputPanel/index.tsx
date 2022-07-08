@@ -105,7 +105,7 @@ export default function CurrencyInputPanel({
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <InputLabel>Amount</InputLabel>
           {currency && (
-            <Typography color={theme.textColor.text3} fontWeight={500} fontSize={14}>
+            <Typography color={theme.palette.text.primary} fontWeight={500} fontSize={14}>
               {!hideBalance && !!currency && selectedCurrencyBalance
                 ? (customBalanceText ?? 'Your balance: ') + selectedCurrencyBalance?.toSignificant(6)
                 : ' -'}

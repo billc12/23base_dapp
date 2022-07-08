@@ -14,21 +14,21 @@ enum DeadlineError {
 }
 
 const FancyButton = styled('button')(({ theme }) => ({
-  color: theme.textColor.text1,
+  color: theme.palette.text.primary,
   alignItems: 'center',
   height: '3rem',
   borderRadius: '14px',
   fontSize: '1rem',
   width: 'auto',
   minWidth: '3.5rem',
-  border: `1px solid ${theme.bgColor.bg3}`,
+  border: `1px solid ${theme.palette.text.disabled}`,
   outline: 'none',
   padding: '14px',
   '&:hover': {
-    border: `1px solid ${theme.bgColor.bg4}`
+    border: `1px solid ${theme.palette.text.primary}`
   },
   '&:focus': {
-    border: `1px solid ${theme.bgColor.bg1}`
+    border: `1px solid ${theme.palette.text.primary}`
   }
 }))
 
@@ -40,13 +40,13 @@ const Option = styled(FancyButton, {
     cursor: 'pointer'
   },
   border: `1px solid ${active ? theme.palette.primary.main : 'transparent'}`,
-  color: active ? theme.bgColor.bg1 : theme.textColor.text1
+  color: active ? theme.palette.text.secondary : theme.palette.text.primary
 }))
 
 const Input = styled('input', {
   shouldForwardProp: prop => prop !== 'color'
 })<{ color?: string }>(({ theme, color }) => ({
-  color: color === 'red' ? theme.palette.error.main : theme.textColor.text1,
+  color: color === 'red' ? theme.palette.error.main : theme.palette.text.primary,
   background: 'transparent',
   fontSize: '16px',
   width: 'auto',
@@ -153,7 +153,7 @@ export default function TransactionSettings({
     <Box display="grid" gap="24px">
       <Box display="grid" gap="8px">
         <Box display="flex" alignItems="center">
-          <Typography fontWeight={400} fontSize={14} color={theme.textColor.text2}>
+          <Typography fontWeight={400} fontSize={14} color={theme.palette.text.primary}>
             Slippage tolerance
           </Typography>
           <QuestionHelper text="Your transaction will revert if the price changes unfavorably by more than this percentage." />
@@ -235,7 +235,7 @@ export default function TransactionSettings({
       {!onlySlippage && (
         <Box display="grid" gap="8px">
           <Box display="flex" alignItems="center">
-            <Typography fontSize={14} fontWeight={400} color={theme.textColor.text2}>
+            <Typography fontSize={14} fontWeight={400} color={theme.palette.text.primary}>
               Transaction deadline
             </Typography>
             <QuestionHelper text="Your transaction will revert if it is pending for more than this long." />

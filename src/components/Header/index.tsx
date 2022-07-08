@@ -59,14 +59,6 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
   padding: '0 40px 0 25px!important',
   zIndex: theme.zIndex.drawer,
   borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
-  // [theme.breakpoints.down('md')]: {
-  //   position: 'fixed',
-  //   bottom: 0,
-  //   left: 0,
-  //   top: 'unset',
-  //   borderTop: '1px solid ' + theme.bgColor.bg4,
-  //   justifyContent: 'center'
-  // },
   '& .link': {
     textDecoration: 'none',
     fontSize: 14,

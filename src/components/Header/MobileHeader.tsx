@@ -36,7 +36,7 @@ const navLinkSx = {
   cursor: 'pointer',
   textDecoration: 'none',
   fontSize: 24,
-  color: (theme: Theme) => theme.textColor.text1,
+  color: (theme: Theme) => theme.palette.text.primary,
   padding: '13px 24px',
   width: '100%',
   textAlign: 'left',

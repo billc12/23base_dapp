@@ -21,7 +21,7 @@ export default function SwitchChainModal({
         <Typography variant="h6">Switch Chain</Typography>
         {fromChain && toChain && (
           <Box display="flex" justifyContent="space-between" width="100%" alignItems="center">
-            <OutlinedCard width="100%" color={theme.textColor.text4}>
+            <OutlinedCard width="100%" color={theme.palette.text.secondary}>
               <Box
                 display="grid"
                 justifyItems="center"
@@ -39,7 +39,7 @@ export default function SwitchChainModal({
               </Box>
             </OutlinedCard>
             <ArrowForwardIcon style={{ margin: '0 20px', flexGrow: 0 }} />
-            <OutlinedCard width="100%" color={theme.textColor.text4}>
+            <OutlinedCard width="100%" color={theme.palette.text.secondary}>
               <Box
                 display="grid"
                 justifyItems="center"

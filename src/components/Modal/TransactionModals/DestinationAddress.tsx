@@ -44,12 +44,12 @@ export default function DestinationAddress({ address, margin }: { address: strin
     <>
       {address && (
         <Box display="flex" margin={margin || '16px 0 0'} fontSize="14px">
-          <Typography marginRight="10px" color={theme.textColor.text4}>
+          <Typography marginRight="10px" color={theme.palette.text.secondary}>
             Destination:
           </Typography>
           <Box display="flex" alignItems={'center'}>
             {StatusIcon(connector)}
-            <Typography marginLeft="8px" color={theme.textColor.text3}>
+            <Typography marginLeft="8px" color={theme.palette.text.secondary}>
               {shortenAddress(address, 10)}
             </Typography>
           </Box>

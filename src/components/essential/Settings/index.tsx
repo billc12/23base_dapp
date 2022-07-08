@@ -19,7 +19,7 @@ const StyledMenuIcon = styled(SettingsIcon)(({ theme }) => ({
   height: '20px',
   width: '20px',
   '& > *': {
-    stroke: theme.textColor.text2
+    stroke: theme.palette.text.primary
   },
   '&:hover': {
     opacity: 0.7
@@ -127,7 +127,7 @@ export default function Settings({ onlySlippage }: { onlySlippage?: boolean }) {
               <CustomizedAutoRow>
                 <Box display="grid">
                   <Box display="flex" alignItems="center" marginBottom="11px">
-                    <Typography fontWeight={400} fontSize={14} color={theme.textColor.text2}>
+                    <Typography fontWeight={400} fontSize={14} color={theme.palette.text.secondary}>
                       Toggle Expert Mode
                     </Typography>
                     <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
@@ -149,7 +149,7 @@ export default function Settings({ onlySlippage }: { onlySlippage?: boolean }) {
                 </Box>
                 <Box display="grid">
                   <Box display="flex" alignItems="center" marginBottom="11px">
-                    <Typography fontWeight={400} fontSize={14} color={theme.textColor.text2}>
+                    <Typography fontWeight={400} fontSize={14} color={theme.palette.text.secondary}>
                       Disable Multihops
                     </Typography>
                     <QuestionHelper text="Restricts swaps to direct pairs only." />
