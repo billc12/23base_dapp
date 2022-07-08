@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { Typography, Box, useTheme, styled } from '@mui/material'
+import { Typography, Box, useTheme, styled, Button } from '@mui/material'
 import { useActiveWeb3React } from 'hooks/'
 import { AppDispatch } from 'state/'
 import { clearAllTransactions } from 'state/transactions/actions'
@@ -9,11 +9,6 @@ import Copy from 'components/essential/Copy'
 import Transaction from './Transaction'
 import { SUPPORTED_WALLETS } from 'constants/index'
 import { injected, walletlink } from 'connectors/'
-import OutlineButton from 'components/Button/OutlineButton'
-import Button from 'components/Button/Button'
-
-import SecondaryButton from 'components/Button/SecondaryButton'
-import TextButton from 'components/Button/TextButton'
 import { OutlinedCard } from 'components/Card'
 
 const Dot = styled('span')({
@@ -85,7 +80,8 @@ export default function AccountDetails({
         >
           {formatConnectorName()}
           {connector !== injected && connector !== walletlink && (
-            <SecondaryButton
+            <Button
+              color="secondary"
               style={{ marginRight: '8px' }}
               onClick={() => {
                 console.log(connector?.deactivate.toString())
@@ -93,7 +89,7 @@ export default function AccountDetails({
               }}
             >
               Disconnect
-            </SecondaryButton>
+            </Button>
           )}
         </Box>
 
@@ -120,9 +116,9 @@ export default function AccountDetails({
         </Box>
       </Box>
       <Box display="flex" gap="10px" width="100%" justifyContent="center">
-        <OutlineButton onClick={toggleWalletModal} primary>
+        <Button variant="outlined" onClick={toggleWalletModal}>
           Close
-        </OutlineButton>
+        </Button>
         <Button
           onClick={() => {
             openOptions()
@@ -136,7 +132,9 @@ export default function AccountDetails({
           <Box display="grid" gap="16px" width="100%">
             <Box display="flex" justifyContent="space-between" width="100%" fontWeight={500}>
               <Typography variant="inherit">Recent Transactions</Typography>
-              <TextButton onClick={clearAllTransactionsCallback}>(clear all)</TextButton>
+              <Button variant="text" onClick={clearAllTransactionsCallback}>
+                (clear all)
+              </Button>
             </Box>
             <Box display="grid">
               {renderTransactions(pendingTransactions)}

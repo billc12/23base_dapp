@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTheme, Box, Typography } from '@mui/material'
-import { styled } from '@mui/material'
+import { styled, Button } from '@mui/material'
 import { ApplicationModal } from '../../../state/application/actions'
 import { useModalOpen, useSettingsModalToggle } from '../../../state/application/hooks'
 import {
@@ -13,8 +13,6 @@ import Modal from 'components/Modal'
 import QuestionHelper from 'components/essential/QuestionHelper'
 import TransactionSettings from './TransactionSettings'
 import { ReactComponent as SettingsIcon } from 'assets/componentsIcon/setting.svg'
-import Button from 'components/Button/Button'
-import TextButton from 'components/Button/TextButton'
 import SwitchToggle from 'components/SwitchToggle'
 
 const StyledMenuIcon = styled(SettingsIcon)(({ theme }) => ({
@@ -63,7 +61,7 @@ export default function Settings({ onlySlippage }: { onlySlippage?: boolean }) {
 
   return (
     <>
-      <TextButton onClick={toggle}>
+      <Button variant="text" onClick={toggle}>
         <StyledMenuIcon />
         {expertMode ? (
           <EmojiWrapper>
@@ -72,7 +70,7 @@ export default function Settings({ onlySlippage }: { onlySlippage?: boolean }) {
             </span>
           </EmojiWrapper>
         ) : null}
-      </TextButton>
+      </Button>
       <Modal
         customIsOpen={showConfirmation}
         customOnDismiss={() => setShowConfirmation(false)}

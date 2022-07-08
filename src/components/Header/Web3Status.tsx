@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
-import { useTheme, Box, styled, Typography } from '@mui/material'
+import { useTheme, Box, styled, Typography, Button } from '@mui/material'
 import { NetworkContextName } from '../../constants'
 import useENSName from '../../hooks/useENSName'
 import { useWalletModalToggle } from '../../state/application/hooks'
@@ -9,12 +9,10 @@ import { TransactionDetails } from '../../state/transactions/reducer'
 import { shortenAddress } from '../../utils'
 import WalletModal from 'components/Modal/WalletModal/index'
 import Spinner from 'components/Spinner'
-import { BlackButton } from 'components/Button/Button'
 import { ReactComponent as Web3StatusIconSvg } from 'assets/svg/web3status_icon.svg'
 import useBreakpoint from 'hooks/useBreakpoint'
 
-const ActionButton = styled(BlackButton)(({ theme }) => ({
-  backgroundColor: theme.palette.error.main,
+const ActionButton = styled(Button)(({ theme }) => ({
   fontSize: '14px',
   marginBottom: 15,
   [theme.breakpoints.down('sm')]: {
@@ -97,9 +95,11 @@ function Web3StatusInner() {
   } else if (error) {
     return (
       <ActionButton
-        width={isDownSm ? '128px' : '140px'}
-        height={isDownSm ? '28px' : '36px'}
-        fontSize={isDownSm ? '12px' : '14px'}
+        sx={{
+          width: isDownSm ? '128px' : '140px',
+          height: isDownSm ? '28px' : '36px',
+          fontSize: isDownSm ? '12px' : '14px'
+        }}
         onClick={toggleWalletModal}
       >
         {error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error'}
@@ -108,9 +108,11 @@ function Web3StatusInner() {
   } else {
     return (
       <ActionButton
-        width={isDownSm ? '128px' : '140px'}
-        height={isDownSm ? '28px' : '36px'}
-        fontSize={isDownSm ? '12px' : '14px'}
+        sx={{
+          width: isDownSm ? '128px' : '140px',
+          height: isDownSm ? '28px' : '36px',
+          fontSize: isDownSm ? '12px' : '14px'
+        }}
         onClick={toggleWalletModal}
       >
         Connect Wallet

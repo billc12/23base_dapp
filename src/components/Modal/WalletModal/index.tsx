@@ -3,7 +3,7 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { isMobile } from 'react-device-detect'
-import { Typography, Box } from '@mui/material'
+import { Typography, Box, Button } from '@mui/material'
 import MetamaskIcon from 'assets/walletIcon/metamask.png'
 import { /*fortmatic,*/ injected, portis } from 'connectors'
 // import { OVERLAY_READY } from 'connectors/Fortmatic'
@@ -16,9 +16,7 @@ import AccountDetails from 'components/Modal/WalletModal/AccountDetails'
 import Modal from '../index'
 import Option from './Option'
 import PendingView from './PendingView'
-import OutlineButton from 'components/Button/OutlineButton'
 import useBreakpoint from 'hooks/useBreakpoint'
-import Button from '../../Button/Button'
 import { ChainId, NETWORK_CHAIN_ID, SUPPORTED_NETWORKS } from '../../../constants/chain'
 
 const WALLET_VIEWS = {
@@ -249,8 +247,9 @@ export default function WalletModal({
             setPendingError={setPendingError}
             tryActivation={tryActivation}
           >
-            <OutlineButton
-              primary
+            <Button
+              variant="outlined"
+              color="primary"
               onClick={() => {
                 setPendingError(false)
                 setWalletView(WALLET_VIEWS.ACCOUNT)
@@ -258,7 +257,7 @@ export default function WalletModal({
               style={{ whiteSpace: 'nowrap' }}
             >
               Change Wallet
-            </OutlineButton>
+            </Button>
           </PendingView>
         ) : (
           <Box display="grid" gap="10px" width="100%" justifyContent="center">

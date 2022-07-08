@@ -1,5 +1,4 @@
-import { Box } from '@mui/material'
-import Button from 'components/Button/Button'
+import { Box, Button } from '@mui/material'
 import { Chain } from 'models/chain'
 import React from 'react'
 import Modal from '../index'

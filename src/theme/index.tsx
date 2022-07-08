@@ -173,14 +173,20 @@ export const override: any = {
     }
   },
   MuiButton: {
+    defaultProps: {
+      variant: 'contained'
+    },
     styleOverrides: {
       root: {
         fontFamily: 'Roboto, -apple-system, BlinkMacSystemFont, sans-serif!important',
         color: theme.palette.primary.contrastText,
-        fontWeight: 500,
         borderRadius: theme.shape.borderRadius,
         transition: '.3s',
-        textTransform: 'none' as const
+        textTransform: 'none' as const,
+        width: '100%',
+        height: 60,
+        fontSize: 16,
+        fontWeight: 500
       },
       contained: {
         backgroundColor: theme.palette.primary.main,
@@ -204,20 +210,11 @@ export const override: any = {
           backgroundColor: theme.palette.secondary.dark
         },
         '&:disabled': {
-          backgroundColor: theme.palette.secondary.light,
-          color: '#412E6A'
+          opacity: theme.palette.action.disabledOpacity,
+          backgroundColor: theme.palette.secondary.light
         }
       },
       outlined: {
-        borderColor: theme.palette.primary.contrastText,
-        color: theme.palette.primary.contrastText,
-        '&:hover, :active': {
-          backgroundColor: 'transparent',
-          borderColor: theme.palette.primary.main,
-          color: theme.palette.primary.main
-        }
-      },
-      outlinedPrimary: {
         backgroundColor: 'transparent',
         borderColor: theme.palette.primary.main,
         color: theme.palette.primary.main,
@@ -225,21 +222,37 @@ export const override: any = {
           backgroundColor: 'transparent',
           borderColor: theme.palette.primary.dark,
           color: theme.palette.primary.dark
+        },
+        '&:disabled': {
+          opacity: theme.palette.action.disabledOpacity
+        }
+      },
+      outlinedSecondary: {
+        backgroundColor: 'transparent',
+        borderColor: theme.palette.secondary.main,
+        color: theme.palette.secondary.main,
+        '&:hover, :active': {
+          backgroundColor: 'transparent',
+          borderColor: theme.palette.secondary.dark,
+          color: theme.palette.secondary.dark
+        },
+        '&:disabled': {
+          opacity: theme.palette.action.disabledOpacity
         }
       },
       text: {
         backgroundColor: 'transparent',
-        color: theme.palette.primary.contrastText,
+        color: theme.palette.primary.main,
+        fontWeight: 500,
         '&:hover, :active': {
           backgroundColor: 'transparent',
-          color: theme.palette.primary.main
+          color: theme.palette.primary.dark,
+          opacity: 1
         }
       },
       textPrimary: {
         color: theme.palette.primary.main,
-        backgroundColor: 'transparent',
         '&:hover, :active': {
-          backgroundColor: 'transparent',
           color: theme.palette.primary.dark
         }
       },

@@ -1,5 +1,5 @@
+import { Button } from '@mui/material'
 import { ComponentStory } from '@storybook/react'
-import Button from 'components/Button/Button'
 import MessageBox from 'components/Modal/TransactionModals/MessageBox'
 import useModal from 'hooks/useModal'
 

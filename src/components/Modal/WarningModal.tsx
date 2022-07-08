@@ -1,8 +1,7 @@
 import { useEffect } from 'react'
 import { Close } from '@mui/icons-material'
-import Button from 'components/Button/Button'
 import Modal from './index'
-import { Typography, Box } from '@mui/material'
+import { Typography, Box, Button } from '@mui/material'
 import useModal from 'hooks/useModal'
 
 const isDev = process.env.NODE_ENV === 'development'

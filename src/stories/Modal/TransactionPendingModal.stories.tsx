@@ -1,4 +1,4 @@
-import Button from 'components/Button/Button'
+import { Button } from '@mui/material'
 import TransacitonPendingModal from 'components/Modal/TransactionModals/TransactionPendingModal'
 import useModal from 'hooks/useModal'
 

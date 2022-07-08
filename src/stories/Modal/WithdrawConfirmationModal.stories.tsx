@@ -1,11 +1,10 @@
 import SwapChain from 'components/Modal/TransactionModals/SwapChain'
 import WithdrawConfirmationModal from 'components/Modal/TransactionModals/WithdrawConfirmationModal'
 import DummyLogo from 'assets/images/ethereum-logo.png'
-import { Box, Typography } from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
 import LogoText from 'components/LogoText'
 import DestinationAddress from 'components/Modal/TransactionModals/DestinationAddress'
 import { ComponentStory } from '@storybook/react'
-import Button from 'components/Button/Button'
 import { useState } from 'react'
 
 export default {

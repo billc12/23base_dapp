@@ -1,10 +1,9 @@
-import { Box, useTheme } from '@mui/material'
+import { Box, useTheme, Button } from '@mui/material'
 import { HideOnMobile } from 'theme/index'
 import { ReactComponent as Medium } from 'assets/socialLinksIcon/medium.svg'
 import { ReactComponent as Twitter } from 'assets/socialLinksIcon/twitter.svg'
 import { ReactComponent as Telegram } from 'assets/socialLinksIcon/telegram.svg'
 import { ExternalLink } from 'theme/components'
-import TextButton from 'components/Button/TextButton'
 
 export default function Footer() {
   const theme = useTheme()
@@ -23,22 +22,27 @@ export default function Footer() {
           width="100%"
           padding="9px 60px 28px"
           gap="40px"
+          sx={{
+            '& svg': {
+              fill: theme => theme.palette.primary.main
+            }
+          }}
         >
-          <TextButton>
+          <Button variant="text">
             <ExternalLink href="">
               <Medium />
             </ExternalLink>
-          </TextButton>
-          <TextButton>
+          </Button>
+          <Button variant="text">
             <ExternalLink href="">
               <Twitter />
             </ExternalLink>
-          </TextButton>
-          <TextButton>
+          </Button>
+          <Button variant="text">
             <ExternalLink href="">
               <Telegram />
             </ExternalLink>
-          </TextButton>
+          </Button>
         </Box>
       </footer>
     </HideOnMobile>

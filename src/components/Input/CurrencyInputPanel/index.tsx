@@ -1,7 +1,6 @@
 import { ChangeEvent, useCallback } from 'react'
-import { styled, Box, useTheme, Typography } from '@mui/material'
+import { styled, Box, useTheme, Typography, Button } from '@mui/material'
 import InputNumerical from 'components/Input/InputNumerical'
-import OutlineButton from 'components/Button/OutlineButton'
 import InputLabel from 'components/Input/InputLabel'
 import SelectButton from 'components/Button/SelectButton'
 import useModal from 'hooks/useModal'
@@ -124,15 +123,9 @@ export default function CurrencyInputPanel({
           />
           {currency && onMax && (
             <ButtonWrapper>
-              <OutlineButton
-                width="64px"
-                height="28px"
-                onClick={onMax}
-                color={theme.textColor.text1}
-                borderRadius="20px"
-              >
+              <Button variant="outlined" sx={{ width: '64px', height: '28px', borderRadius: '20px' }} onClick={onMax}>
                 Max
-              </OutlineButton>
+              </Button>
             </ButtonWrapper>
           )}
           <HideOnMobile breakpoint={'sm'}>
