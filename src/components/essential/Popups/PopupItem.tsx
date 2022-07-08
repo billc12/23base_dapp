@@ -1,7 +1,6 @@
 import { useCallback, useEffect } from 'react'
-import { useSpring } from 'react-spring/web'
 import { styled } from '@mui/material'
-import { animated } from 'react-spring'
+import { animated, useSpring } from 'react-spring'
 import { useRemovePopup } from 'state/application/hooks'
 import TransactionPopup from './TransactionPopup'
 import { CloseIcon } from 'theme/components'

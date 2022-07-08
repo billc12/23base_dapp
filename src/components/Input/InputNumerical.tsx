@@ -1,4 +1,4 @@
-import { InputHTMLAttributes, useCallback } from 'react'
+import { InputHTMLAttributes, useCallback, ChangeEvent } from 'react'
 import { Box } from '@mui/material'
 import Input, { InputProps } from './index'
 import { escapeRegExp } from 'utils'
@@ -35,7 +35,7 @@ export default function NumericalInput({
     return null
   }
   const handleChange = useCallback(
-    event => {
+    (event: ChangeEvent<HTMLInputElement>) => {
       // replace commas with periods
       const formatted = enforcer(event.target.value)
       if (formatted === null) {

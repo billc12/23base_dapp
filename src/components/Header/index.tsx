@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { NavLink, useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { AppBar, Box, IconButton, MenuItem, styled as muiStyled, styled } from '@mui/material'
 import { ExternalLink } from 'theme/components'
 import Web3Status from './Web3Status'
@@ -46,7 +46,7 @@ const navLinkSX = ({ theme }: any) => ({
   }
 })
 
-const StyledNavLink = styled(NavLink)(navLinkSX)
+const StyledNavLink = styled(Link)(navLinkSX)
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   position: 'relative',
@@ -108,7 +108,7 @@ const Filler = styled('div')(({ theme }) => ({
   }
 }))
 
-const MainLogo = styled(NavLink)(({ theme }) => ({
+const MainLogo = styled(Link)(({ theme }) => ({
   '& img': {
     width: 180.8,
     height: 34.7
@@ -209,7 +209,7 @@ export default function Header() {
                     {titleContent ?? title}
                   </ExternalLink>
                 ) : (
-                  <NavLink
+                  <Link
                     key={title + idx}
                     id={`${route}-nav-link`}
                     to={route ?? ''}
@@ -226,7 +226,7 @@ export default function Header() {
                     }
                   >
                     {titleContent ?? title}
-                  </NavLink>
+                  </Link>
                 )
               )}
             </LinksWrapper>
