@@ -3,10 +3,10 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { isMobile } from 'react-device-detect'
-import { Typography, Box } from '@mui/material'
+import { Typography, Box, Button } from '@mui/material'
 import MetamaskIcon from 'assets/walletIcon/metamask.png'
-import { fortmatic, injected, portis } from 'connectors'
-import { OVERLAY_READY } from 'connectors/Fortmatic'
+import { /*fortmatic,*/ injected, portis } from 'connectors'
+// import { OVERLAY_READY } from 'connectors/Fortmatic'
 import { SUPPORTED_WALLETS } from 'constants/index'
 import usePrevious from 'hooks/usePrevious'
 import { ApplicationModal } from 'state/application/actions'
@@ -16,9 +16,7 @@ import AccountDetails from 'components/Modal/WalletModal/AccountDetails'
 import Modal from '../index'
 import Option from './Option'
 import PendingView from './PendingView'
-import OutlineButton from 'components/Button/OutlineButton'
 import useBreakpoint from 'hooks/useBreakpoint'
-import Button from '../../Button/Button'
 import { ChainId, NETWORK_CHAIN_ID, SUPPORTED_NETWORKS } from '../../../constants/chain'
 
 const WALLET_VIEWS = {
@@ -84,7 +82,7 @@ export default function WalletModal({
       setWalletView(WALLET_VIEWS.PENDING)
 
       // if the connector is walletconnect and the user has already tried to connect, manually reset the connector
-      if (conn instanceof WalletConnectConnector && conn.walletConnectProvider?.wc?.uri) {
+      if (conn instanceof WalletConnectConnector && conn.walletConnectProvider?.connector?.connected) {
         conn.walletConnectProvider = undefined
       }
 
@@ -93,6 +91,7 @@ export default function WalletModal({
           if (error instanceof UnsupportedChainIdError) {
             activate(conn) // a little janky...can't use setError because the connector isn't set
           } else {
+            console.error(error)
             setPendingError(true)
           }
         })
@@ -101,11 +100,11 @@ export default function WalletModal({
   )
 
   // close wallet modal if fortmatic modal is active
-  useEffect(() => {
-    fortmatic.on(OVERLAY_READY, () => {
-      toggleWalletModal()
-    })
-  }, [toggleWalletModal])
+  // useEffect(() => {
+  //   fortmatic.on(OVERLAY_READY, () => {
+  //     toggleWalletModal()
+  //   })
+  // }, [toggleWalletModal])
 
   // get wallets user can switch too, depending on device/browser
   function getOptions() {
@@ -130,7 +129,7 @@ export default function WalletModal({
               active={option.connector && option.connector === connector}
               link={option.href}
               header={option.name}
-              icon={require('../../../assets/walletIcon/' + option.iconName)?.default}
+              icon={require('../../../assets/walletIcon/' + option.iconName)}
             />
           )
         }
@@ -180,7 +179,7 @@ export default function WalletModal({
             active={option.connector === connector}
             link={option.href}
             header={option.name}
-            icon={require('../../../assets/walletIcon/' + option.iconName)?.default}
+            icon={require('../../../assets/walletIcon/' + option.iconName)}
           />
         )
       )
@@ -248,8 +247,9 @@ export default function WalletModal({
             setPendingError={setPendingError}
             tryActivation={tryActivation}
           >
-            <OutlineButton
-              primary
+            <Button
+              variant="outlined"
+              color="primary"
               onClick={() => {
                 setPendingError(false)
                 setWalletView(WALLET_VIEWS.ACCOUNT)
@@ -257,7 +257,7 @@ export default function WalletModal({
               style={{ whiteSpace: 'nowrap' }}
             >
               Change Wallet
-            </OutlineButton>
+            </Button>
           </PendingView>
         ) : (
           <Box display="grid" gap="10px" width="100%" justifyContent="center">

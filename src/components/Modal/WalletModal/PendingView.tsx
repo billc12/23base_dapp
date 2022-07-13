@@ -1,7 +1,6 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import React from 'react'
-import { Box, useTheme } from '@mui/material'
-import Button from 'components/Button/Button'
+import { Box, useTheme, Button } from '@mui/material'
 import { ReactComponent as CrossCircle } from 'assets/componentsIcon/statusIcon/error_icon.svg'
 import { OutlinedCard } from 'components/Card'
 import Spinner from 'components/Spinner'

@@ -1,5 +1,4 @@
-import { Box } from '@mui/material'
-import TextButton from 'components/Button/TextButton'
+import { Box, Button } from '@mui/material'
 import ChainSelect from '../ChainSelect'
 import { Chain } from 'models/chain'
 import SwitchButton from './SwitcherButton'
@@ -50,9 +49,13 @@ export default function ChainSwap({
         active={activeFrom}
       />
       <Box position={'absolute'} left={'calc(50% - 16px)'} zIndex={99} padding="0px" height="32px" bottom="8px">
-        <TextButton onClick={handleSwitch} disabled={disabledFrom || disabledTo || !onSelectTo || !onSelectFrom}>
+        <Button
+          variant="text"
+          onClick={handleSwitch}
+          disabled={disabledFrom || disabledTo || !onSelectTo || !onSelectFrom}
+        >
           <SwitchButton />
-        </TextButton>
+        </Button>
       </Box>
       <ChainSelect
         label={'To'}

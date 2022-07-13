@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import { styled } from '@mui/material'
 import Header from '../components/Header'
 import Polling from '../components/essential/Polling'
@@ -57,15 +57,17 @@ export default function App() {
               <Polling />
               <WarningModal />
               <Web3ReactManager>
-                <Switch>
-                  <Route exact strict path="/test1" component={ComingSoon} />
-                </Switch>
+                <Routes>
+                  <Route path="/test1" element={<ComingSoon />} />
+                  <Route path="/test2" element={<ComingSoon />} />
+                  <Route path="/" element={<ComingSoon />} />
+                </Routes>
               </Web3ReactManager>
             </BodyWrapper>
             <Footer />
           </ContentWrapper>
         </AppWrapper>
-      </ModalProvider>
+      </ModalProvider>{' '}
     </Suspense>
   )
 }

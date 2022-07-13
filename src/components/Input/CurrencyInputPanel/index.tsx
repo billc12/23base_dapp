@@ -1,7 +1,6 @@
 import { ChangeEvent, useCallback } from 'react'
-import { styled, Box, useTheme, Typography } from '@mui/material'
+import { styled, Box, useTheme, Typography, Button } from '@mui/material'
 import InputNumerical from 'components/Input/InputNumerical'
-import OutlineButton from 'components/Button/OutlineButton'
 import InputLabel from 'components/Input/InputLabel'
 import SelectButton from 'components/Button/SelectButton'
 import useModal from 'hooks/useModal'
@@ -106,7 +105,7 @@ export default function CurrencyInputPanel({
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <InputLabel>Amount</InputLabel>
           {currency && (
-            <Typography color={theme.textColor.text3} fontWeight={500} fontSize={14}>
+            <Typography color={theme.palette.text.primary} fontWeight={500} fontSize={14}>
               {!hideBalance && !!currency && selectedCurrencyBalance
                 ? (customBalanceText ?? 'Your balance: ') + selectedCurrencyBalance?.toSignificant(6)
                 : ' -'}
@@ -124,15 +123,9 @@ export default function CurrencyInputPanel({
           />
           {currency && onMax && (
             <ButtonWrapper>
-              <OutlineButton
-                width="64px"
-                height="28px"
-                onClick={onMax}
-                color={theme.textColor.text1}
-                borderRadius="20px"
-              >
+              <Button variant="outlined" sx={{ width: '64px', height: '28px', borderRadius: '20px' }} onClick={onMax}>
                 Max
-              </OutlineButton>
+              </Button>
             </ButtonWrapper>
           )}
           <HideOnMobile breakpoint={'sm'}>

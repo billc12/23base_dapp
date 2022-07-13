@@ -1,13 +1,12 @@
 import { useState, useCallback } from 'react'
 import { ExpandMore, Menu, Close } from '@mui/icons-material'
 import { NavLink } from 'react-router-dom'
-import { Box, MenuItem, AppBar, styled, Theme } from '@mui/material'
+import { Box, MenuItem, AppBar, styled, Theme, Button } from '@mui/material'
 import Modal from 'components/Modal'
 import ChainSwap from '../../assets/svg/chain_swap.svg'
 import { ExternalLink } from 'theme/components'
 import { ShowOnMobile } from 'theme/index'
 import Image from 'components/Image'
-import TextButton from 'components/Button/TextButton'
 import { Tabs } from './'
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
@@ -37,7 +36,7 @@ const navLinkSx = {
   cursor: 'pointer',
   textDecoration: 'none',
   fontSize: 24,
-  color: (theme: Theme) => theme.textColor.text1,
+  color: (theme: Theme) => theme.palette.text.primary,
   padding: '13px 24px',
   width: '100%',
   textAlign: 'left',
@@ -116,9 +115,13 @@ export default function MobileHeader() {
             </MainLogo>
           </Box>
           {isOpen ? (
-            <TextButton onClick={handleDismiss}>{<Close />}</TextButton>
+            <Button variant="text" onClick={handleDismiss}>
+              {<Close />}
+            </Button>
           ) : (
-            <TextButton onClick={handleClick}>{<Menu />}</TextButton>
+            <Button variant="text" onClick={handleClick}>
+              {<Menu />}
+            </Button>
           )}
         </StyledAppBar>
       </ShowOnMobile>

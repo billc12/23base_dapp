@@ -1,11 +1,11 @@
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import 'inter-ui'
-import { StrictMode } from 'react'
 import { CssBaseline, ThemeProvider as MuiThemeProvider, StyledEngineProvider } from '@mui/material'
-import ReactDOM from 'react-dom'
 import theme from 'theme/index'
 import { Provider } from 'react-redux'
-import { HashRouter } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
 import Blocklist from './components/essential/Blocklist'
 import { NetworkContextName } from './constants'
 import App from './pages/App'
@@ -15,6 +15,8 @@ import ApplicationUpdater from './state/application/updater'
 import MulticallUpdater from './state/multicall/updater'
 import TransactionUpdater from './state/transactions/updater'
 import getLibrary from './utils/getLibrary'
+import { Buffer } from 'buffer'
+
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
 function Updaters() {
@@ -26,8 +28,13 @@ function Updaters() {
     </>
   )
 }
+window.Buffer = window.Buffer || Buffer
 
-ReactDOM.render(
+const container = document.getElementById('root')
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const root = createRoot(container!)
+
+root.render(
   <StrictMode>
     <Web3ReactProvider getLibrary={getLibrary}>
       <Web3ProviderNetwork getLibrary={getLibrary}>
@@ -37,17 +44,16 @@ ReactDOM.render(
             <StyledEngineProvider injectFirst>
               <MuiThemeProvider theme={theme}>
                 <CssBaseline />
-                <HashRouter>
+                <BrowserRouter>
                   <App />
-                </HashRouter>
+                </BrowserRouter>
               </MuiThemeProvider>
             </StyledEngineProvider>
           </Provider>
         </Blocklist>
       </Web3ProviderNetwork>
     </Web3ReactProvider>
-  </StrictMode>,
-  document.getElementById('root')
+  </StrictMode>
 )
 
 serviceWorkerRegistration.unregister()

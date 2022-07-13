@@ -1,5 +1,5 @@
+import { Button } from '@mui/material'
 import { ComponentMeta } from '@storybook/react'
-import Button from 'components/Button/Button'
 import TransactionSubmittedModal from 'components/Modal/TransactionModals/TransactiontionSubmittedModal'
 import useModal from 'hooks/useModal'
 

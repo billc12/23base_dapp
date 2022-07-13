@@ -1,8 +1,7 @@
 import { useState, ChangeEvent, useCallback, useEffect } from 'react'
-import { Box, Typography } from '@mui/material'
+import { Box, Typography, Button } from '@mui/material'
 import Modal from 'components/Modal'
 import CurrencyList from './CurrencyList'
-import TextButton from 'components/Button/TextButton'
 import Divider from 'components/Divider'
 import Input from 'components/Input'
 import { Currency } from 'constants/token'
@@ -45,9 +44,9 @@ export default function SelectCurrencyModal({ onSelectCurrency }: { onSelectCurr
         </Box>
         <Divider />
         <Box height="55px" justifyContent="center" display="flex">
-          <TextButton onClick={onManage} primary>
+          <Button variant="text" onClick={onManage}>
             Manage
-          </TextButton>
+          </Button>
         </Box>
       </Modal>
     </>

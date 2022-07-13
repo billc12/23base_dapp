@@ -40,5 +40,5 @@ body2.args = {
 export const caption = DefaultTemplate.bind({})
 caption.args = {
   variant: 'caption',
-  children: 'fontSize: 12, color: theme.textColor.text3'
+  children: 'fontSize: 12'
 }

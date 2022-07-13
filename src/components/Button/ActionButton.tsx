@@ -1,5 +1,4 @@
-import Button from './Button'
-import OutlineButton from './OutlineButton'
+import { Button } from '@mui/material'
 import Spinner from 'components/Spinner'
 import { Typography } from '@mui/material'
 
@@ -29,7 +28,7 @@ export default function ActionButton({
   return (
     <>
       {error || pending ? (
-        <OutlineButton primary disabled height={height} width={width}>
+        <Button variant="outlined" color="primary" disabled sx={{ height, width }}>
           {pending ? (
             <>
               <Spinner marginRight={16} />
@@ -38,13 +37,13 @@ export default function ActionButton({
           ) : (
             error
           )}
-        </OutlineButton>
+        </Button>
       ) : success ? (
-        <Button disabled height={height} width={width}>
+        <Button disabled sx={{ height, width }}>
           <Typography variant="inherit">{successText ?? actionText}</Typography>
         </Button>
       ) : (
-        <Button height={height} width={width} onClick={onAction} disabled={disableAction}>
+        <Button sx={{ height, width }} onClick={onAction} disabled={disableAction}>
           {actionText}
         </Button>
       )}

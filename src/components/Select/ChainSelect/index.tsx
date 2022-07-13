@@ -26,7 +26,7 @@ export default function ChainSelect({
   placeholder?: string
 }) {
   const handleChange = useCallback(
-    e => {
+    (e: any) => {
       const chain = chainList.find(chain => chain.symbol === e.target.value) ?? null
       onChange && onChange(chain)
     },

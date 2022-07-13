@@ -1,12 +1,11 @@
 import React from 'react'
-import { Box, Typography } from '@mui/material'
+import { Box, Typography, Button } from '@mui/material'
 import Modal from 'components/Modal'
 import { ReactComponent as SuccessIcon } from 'assets/componentsIcon/statusIcon/success_icon.svg'
 import { ReactComponent as FailureIcon } from 'assets/componentsIcon/statusIcon/failure_icon.svg'
 import { ReactComponent as SupportIcon } from 'assets/componentsIcon/statusIcon/support_icon.svg'
 import { ReactComponent as Error } from 'assets/componentsIcon/statusIcon/error_icon.svg'
 import { ReactComponent as Warning } from 'assets/componentsIcon/statusIcon/warning_icon.svg'
-import Button from 'components/Button/Button'
 import useModal from 'hooks/useModal'
 
 interface Props {

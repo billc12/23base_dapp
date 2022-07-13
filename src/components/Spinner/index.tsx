@@ -27,7 +27,7 @@ export default function Spinner({
         variant="determinate"
         sx={{
           '& svg circle': {
-            stroke: theme => theme.bgColor.bg5
+            stroke: '#cccccc'
           }
         }}
         thickness={thickness - 1}

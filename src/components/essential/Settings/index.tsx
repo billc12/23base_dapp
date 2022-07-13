@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTheme, Box, Typography } from '@mui/material'
-import { styled } from '@mui/material'
+import { styled, Button } from '@mui/material'
 import { ApplicationModal } from '../../../state/application/actions'
 import { useModalOpen, useSettingsModalToggle } from '../../../state/application/hooks'
 import {
@@ -13,15 +13,13 @@ import Modal from 'components/Modal'
 import QuestionHelper from 'components/essential/QuestionHelper'
 import TransactionSettings from './TransactionSettings'
 import { ReactComponent as SettingsIcon } from 'assets/componentsIcon/setting.svg'
-import Button from 'components/Button/Button'
-import TextButton from 'components/Button/TextButton'
 import SwitchToggle from 'components/SwitchToggle'
 
 const StyledMenuIcon = styled(SettingsIcon)(({ theme }) => ({
   height: '20px',
   width: '20px',
   '& > *': {
-    stroke: theme.textColor.text2
+    stroke: theme.palette.text.primary
   },
   '&:hover': {
     opacity: 0.7
@@ -63,7 +61,7 @@ export default function Settings({ onlySlippage }: { onlySlippage?: boolean }) {
 
   return (
     <>
-      <TextButton onClick={toggle}>
+      <Button variant="text" onClick={toggle}>
         <StyledMenuIcon />
         {expertMode ? (
           <EmojiWrapper>
@@ -72,7 +70,7 @@ export default function Settings({ onlySlippage }: { onlySlippage?: boolean }) {
             </span>
           </EmojiWrapper>
         ) : null}
-      </TextButton>
+      </Button>
       <Modal
         customIsOpen={showConfirmation}
         customOnDismiss={() => setShowConfirmation(false)}
@@ -129,7 +127,7 @@ export default function Settings({ onlySlippage }: { onlySlippage?: boolean }) {
               <CustomizedAutoRow>
                 <Box display="grid">
                   <Box display="flex" alignItems="center" marginBottom="11px">
-                    <Typography fontWeight={400} fontSize={14} color={theme.textColor.text2}>
+                    <Typography fontWeight={400} fontSize={14} color={theme.palette.text.secondary}>
                       Toggle Expert Mode
                     </Typography>
                     <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
@@ -151,7 +149,7 @@ export default function Settings({ onlySlippage }: { onlySlippage?: boolean }) {
                 </Box>
                 <Box display="grid">
                   <Box display="flex" alignItems="center" marginBottom="11px">
-                    <Typography fontWeight={400} fontSize={14} color={theme.textColor.text2}>
+                    <Typography fontWeight={400} fontSize={14} color={theme.palette.text.secondary}>
                       Disable Multihops
                     </Typography>
                     <QuestionHelper text="Restricts swaps to direct pairs only." />

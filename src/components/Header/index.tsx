@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { NavLink, useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { AppBar, Box, IconButton, MenuItem, styled as muiStyled, styled } from '@mui/material'
 import { ExternalLink } from 'theme/components'
 import Web3Status from './Web3Status'
@@ -46,7 +46,7 @@ const navLinkSX = ({ theme }: any) => ({
   }
 })
 
-const StyledNavLink = styled(NavLink)(navLinkSX)
+const StyledNavLink = styled(Link)(navLinkSX)
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   position: 'relative',
@@ -59,14 +59,6 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
   padding: '0 40px 0 25px!important',
   zIndex: theme.zIndex.drawer,
   borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
-  // [theme.breakpoints.down('md')]: {
-  //   position: 'fixed',
-  //   bottom: 0,
-  //   left: 0,
-  //   top: 'unset',
-  //   borderTop: '1px solid ' + theme.bgColor.bg4,
-  //   justifyContent: 'center'
-  // },
   '& .link': {
     textDecoration: 'none',
     fontSize: 14,
@@ -108,7 +100,7 @@ const Filler = styled('div')(({ theme }) => ({
   }
 }))
 
-const MainLogo = styled(NavLink)(({ theme }) => ({
+const MainLogo = styled(Link)(({ theme }) => ({
   '& img': {
     width: 180.8,
     height: 34.7
@@ -209,7 +201,7 @@ export default function Header() {
                     {titleContent ?? title}
                   </ExternalLink>
                 ) : (
-                  <NavLink
+                  <Link
                     key={title + idx}
                     id={`${route}-nav-link`}
                     to={route ?? ''}
@@ -226,7 +218,7 @@ export default function Header() {
                     }
                   >
                     {titleContent ?? title}
-                  </NavLink>
+                  </Link>
                 )
               )}
             </LinksWrapper>

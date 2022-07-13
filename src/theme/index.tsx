@@ -14,27 +14,8 @@ interface Width {
   maxContent: string
 }
 
-interface TextColor {
-  text1: string
-  text2: string
-  text3: string
-  text4: string
-  text5: string
-  primary: string
-}
-
-interface BgColor {
-  bg1: string
-  bg2: string
-  bg3: string
-  bg4: string
-  bg5: string
-}
-
 declare module '@mui/material/styles' {
   interface Theme {
-    textColor: TextColor
-    bgColor: BgColor
     gradient: Gradient
     height: Height
     width: Width
@@ -43,15 +24,11 @@ declare module '@mui/material/styles' {
 
 declare module '@mui/material/styles/createTheme' {
   interface ThemeOptions {
-    textColor: TextColor
-    bgColor: BgColor
     gradient: Gradient
     height: Height
     width: Width
   }
   interface Theme {
-    textColor: TextColor
-    bgColor: BgColor
     gradient: Gradient
     height: Height
     width: Width
@@ -103,21 +80,6 @@ export const theme = {
       A200: '#303030',
       A100: '#A1A1A1'
     }
-  },
-  textColor: {
-    text1: '#252525',
-    text2: '#333333',
-    text3: '#727272',
-    text4: '#999999',
-    text5: '#CCCCCC',
-    primary: '#31B047'
-  },
-  bgColor: {
-    bg1: '#000000',
-    bg2: '#191919',
-    bg3: '#252525',
-    bg4: '#303030',
-    bg5: '#A1A1A1'
   },
   gradient: {
     gradient1: '#ffffff linear-gradient(154.62deg, #77C803 9.44%, #28A03E 59.25%);'
@@ -173,14 +135,20 @@ export const override: any = {
     }
   },
   MuiButton: {
+    defaultProps: {
+      variant: 'contained'
+    },
     styleOverrides: {
       root: {
         fontFamily: 'Roboto, -apple-system, BlinkMacSystemFont, sans-serif!important',
         color: theme.palette.primary.contrastText,
-        fontWeight: 500,
         borderRadius: theme.shape.borderRadius,
         transition: '.3s',
-        textTransform: 'none' as const
+        textTransform: 'none' as const,
+        width: '100%',
+        height: 60,
+        fontSize: 16,
+        fontWeight: 500
       },
       contained: {
         backgroundColor: theme.palette.primary.main,
@@ -204,20 +172,11 @@ export const override: any = {
           backgroundColor: theme.palette.secondary.dark
         },
         '&:disabled': {
-          backgroundColor: theme.palette.secondary.light,
-          color: '#412E6A'
+          opacity: theme.palette.action.disabledOpacity,
+          backgroundColor: theme.palette.secondary.light
         }
       },
       outlined: {
-        borderColor: theme.palette.primary.contrastText,
-        color: theme.palette.primary.contrastText,
-        '&:hover, :active': {
-          backgroundColor: 'transparent',
-          borderColor: theme.palette.primary.main,
-          color: theme.palette.primary.main
-        }
-      },
-      outlinedPrimary: {
         backgroundColor: 'transparent',
         borderColor: theme.palette.primary.main,
         color: theme.palette.primary.main,
@@ -225,21 +184,37 @@ export const override: any = {
           backgroundColor: 'transparent',
           borderColor: theme.palette.primary.dark,
           color: theme.palette.primary.dark
+        },
+        '&:disabled': {
+          opacity: theme.palette.action.disabledOpacity
+        }
+      },
+      outlinedSecondary: {
+        backgroundColor: 'transparent',
+        borderColor: theme.palette.secondary.main,
+        color: theme.palette.secondary.main,
+        '&:hover, :active': {
+          backgroundColor: 'transparent',
+          borderColor: theme.palette.secondary.dark,
+          color: theme.palette.secondary.dark
+        },
+        '&:disabled': {
+          opacity: theme.palette.action.disabledOpacity
         }
       },
       text: {
         backgroundColor: 'transparent',
-        color: theme.palette.primary.contrastText,
+        color: theme.palette.primary.main,
+        fontWeight: 500,
         '&:hover, :active': {
           backgroundColor: 'transparent',
-          color: theme.palette.primary.main
+          color: theme.palette.primary.dark,
+          opacity: 1
         }
       },
       textPrimary: {
         color: theme.palette.primary.main,
-        backgroundColor: 'transparent',
         '&:hover, :active': {
-          backgroundColor: 'transparent',
           color: theme.palette.primary.dark
         }
       },
@@ -274,8 +249,7 @@ export const override: any = {
         fontWeight: 500
       },
       caption: {
-        fontSize: 12,
-        color: theme.textColor.text3
+        fontSize: 12
       },
       subtitle1: {},
       subtitle2: {}
