@@ -102,6 +102,7 @@
     "dayjs": "^1.11.3",
     "decimal.js-light": "^2.5.1",
     "jsbi": "^4.3.0",
-    "toformat": "^2.0.0"
+    "toformat": "^2.0.0",
+    "web3": "^1.7.4"
   }
 }
