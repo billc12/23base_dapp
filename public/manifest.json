@@ -1,7 +1,7 @@
 {
   "background_color": "#fff",
   "display": "standalone",
-  "homepage_url": "https://chainswap.com/",
+  "homepage_url": "",
   "icons": [
     {
       "src": "./images/196x196_App_Icon.png",
@@ -17,8 +17,8 @@
     }
   ],
   "orientation": "portrait",
-  "name": "Chainswap",
-  "short_name": "Chainswap",
+  "name": "",
+  "short_name": "",
   "start_url": ".",
   "theme_color": "#31B047"
 }

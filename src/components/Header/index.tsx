@@ -6,7 +6,7 @@ import Web3Status from './Web3Status'
 import { HideOnMobile, ShowOnMobile } from 'theme/index'
 import PlainSelect from 'components/Select/PlainSelect'
 import Image from 'components/Image'
-import antimatter from '../../assets/svg/chain_swap.svg'
+import logo from '../../assets/svg/chain_swap.svg'
 import { routes } from 'constants/routes'
 import MobileMenu from './MobileMenu'
 import NetworkSelect from './NetworkSelect'
@@ -32,8 +32,8 @@ export const Tabs: Tab[] = [
   },
 
   { title: 'Test3', route: routes.test3 },
-  { title: 'DAO', link: 'https://dao.antimatter.finance/#/' },
-  { title: 'Docs', link: 'https://docs.antimatter.finance/' }
+  { title: 'DAO', link: 'https://google.com' },
+  { title: 'Docs', link: 'https://google.com' }
 ]
 
 const navLinkSX = ({ theme }: any) => ({
@@ -135,8 +135,8 @@ export default function Header() {
       <Filler />
       <StyledAppBar>
         <Box display="flex" alignItems="center">
-          <MainLogo id={'antimatter'} to={'/'}>
-            <Image src={antimatter} alt={'antimatter'} />
+          <MainLogo id={'logo'} to={'/'}>
+            <Image src={logo} alt={'logo'} />
           </MainLogo>
           <HideOnMobile breakpoint="md">
             <LinksWrapper>
