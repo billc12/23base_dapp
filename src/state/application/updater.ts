@@ -55,8 +55,10 @@ export default function Updater(): null {
     dispatch(updateBlockNumber({ chainId: debouncedState.chainId, blockNumber: debouncedState.blockNumber }))
   }, [windowVisible, dispatch, debouncedState.blockNumber, debouncedState.chainId])
 
-  const providers = useMemo(() => SUPPORT_NETWORK_CHAIN_IDS.map(v => getOtherNetworkLibrary(v)), [])
-
+  const providers = useMemo(
+    () => SUPPORT_NETWORK_CHAIN_IDS.filter(i => i !== chainId).map(v => getOtherNetworkLibrary(v)),
+    [chainId]
+  )
   const [timeInt, setTimeInt] = useState(0)
   useEffect(() => {
     setTimeout(() => setTimeInt(timeInt + 1), 5000)

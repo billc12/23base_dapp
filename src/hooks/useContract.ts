@@ -61,19 +61,25 @@ export function useBytes32TokenContract(tokenAddress?: string, withSignerIfPossi
 }
 
 export function useMulticallContract(queryChainId?: ChainId): Contract | null {
-  const { chainId } = useActiveWeb3React()
-  const curChainId = useMemo(() => queryChainId || chainId, [chainId, queryChainId])
+  const { chainId, library } = useActiveWeb3React()
   return useMemo(() => {
-    if (!curChainId) return null
-    const library = getOtherNetworkLibrary(curChainId)
-    if (!library) return null
-    try {
-      return getContract(MULTICALL_NETWORKS[curChainId], MULTICALL_ABI, library, undefined)
-    } catch (error) {
-      console.error('Failed to get contract', error)
-      return null
+    if (!queryChainId && !chainId) return null
+
+    if (queryChainId && chainId !== queryChainId) {
+      const web3Library = getOtherNetworkLibrary(queryChainId)
+      if (!web3Library) return null
+      try {
+        return getContract(MULTICALL_NETWORKS[queryChainId], MULTICALL_ABI, web3Library, undefined)
+      } catch (error) {
+        console.error('Failed to get contract', error)
+        return null
+      }
     }
-  }, [curChainId])
+    if (chainId && library) {
+      return getContract(MULTICALL_NETWORKS[chainId], MULTICALL_ABI, library, undefined)
+    }
+    return null
+  }, [chainId, library, queryChainId])
 }
 
 export function useSocksController(): Contract | null {
