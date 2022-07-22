@@ -14,18 +14,38 @@ import { getOtherNetworkLibrary } from 'connectors/MultiNetworkConnector'
 import ERC721_ABI from '../constants/abis/erc721.json'
 
 // returns null on errors
-function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
-  const { library, account } = useActiveWeb3React()
+function useContract(
+  address: string | undefined,
+  ABI: any,
+  withSignerIfPossible = true,
+  queryChainId?: ChainId
+): Contract | null {
+  const { library, account, chainId } = useActiveWeb3React()
 
   return useMemo(() => {
-    if (!address || !ABI || !library) return null
-    try {
-      return getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined)
-    } catch (error) {
-      console.error('Failed to get contract', error)
-      return null
+    if (!address || !ABI) return null
+    if (!queryChainId && !chainId) return null
+
+    if (queryChainId && chainId !== queryChainId) {
+      const web3Library = getOtherNetworkLibrary(queryChainId)
+      if (!web3Library) return null
+      try {
+        return getContract(address, ABI, web3Library, undefined)
+      } catch (error) {
+        console.error('Failed to get contract', error)
+        return null
+      }
     }
-  }, [address, ABI, library, withSignerIfPossible, account])
+    if (chainId && library) {
+      try {
+        return getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined)
+      } catch (error) {
+        console.error('Failed to get contract', error)
+        return null
+      }
+    }
+    return null
+  }, [ABI, account, address, chainId, library, queryChainId, withSignerIfPossible])
 }
 
 export function useV2MigratorContract(): Contract | null {
@@ -61,25 +81,13 @@ export function useBytes32TokenContract(tokenAddress?: string, withSignerIfPossi
 }
 
 export function useMulticallContract(queryChainId?: ChainId): Contract | null {
-  const { chainId, library } = useActiveWeb3React()
-  return useMemo(() => {
-    if (!queryChainId && !chainId) return null
-
-    if (queryChainId && chainId !== queryChainId) {
-      const web3Library = getOtherNetworkLibrary(queryChainId)
-      if (!web3Library) return null
-      try {
-        return getContract(MULTICALL_NETWORKS[queryChainId], MULTICALL_ABI, web3Library, undefined)
-      } catch (error) {
-        console.error('Failed to get contract', error)
-        return null
-      }
-    }
-    if (chainId && library) {
-      return getContract(MULTICALL_NETWORKS[chainId], MULTICALL_ABI, library, undefined)
-    }
-    return null
-  }, [chainId, library, queryChainId])
+  const { chainId } = useActiveWeb3React()
+  return useContract(
+    queryChainId || chainId ? MULTICALL_NETWORKS[(queryChainId || chainId) as ChainId] : undefined,
+    MULTICALL_ABI,
+    undefined,
+    queryChainId
+  )
 }
 
 export function useSocksController(): Contract | null {
