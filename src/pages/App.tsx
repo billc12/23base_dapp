@@ -1,14 +1,15 @@
 import { Suspense } from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { styled } from '@mui/material'
 import Header from '../components/Header'
 import Polling from '../components/essential/Polling'
 import Popups from '../components/essential/Popups'
 import Web3ReactManager from '../components/essential/Web3ReactManager'
-import WarningModal from '../components/Modal/WarningModal'
+// import WarningModal from '../components/Modal/WarningModal'
 import ComingSoon from './ComingSoon'
 import { ModalProvider } from 'context/ModalContext'
-import Footer from 'components/Footer'
+import { routes } from 'constants/routes'
+// import Footer from 'components/Footer'
 
 const AppWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -16,27 +17,27 @@ const AppWrapper = styled('div')(({ theme }) => ({
   overflowX: 'hidden',
   [theme.breakpoints.down('md')]: {
     flexDirection: 'column',
-    height: '100vh'
+    minHeight: '100vh'
   }
 }))
 
 const ContentWrapper = styled('div')({
-  width: '100%',
-  maxHeight: '100vh',
-  overflow: 'auto',
-  alignItems: 'center'
+  width: '100%'
+  // maxHeight: '100vh',
+  // overflow: 'auto',
+  // alignItems: 'center'
 })
 
 const BodyWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   width: '100%',
-  minHeight: `calc(100vh - ${theme.height.header} - ${theme.height.footer})`,
+  minHeight: `calc(100vh - ${theme.height.header})`,
   padding: '50px 0 80px',
   justifyContent: 'center',
   alignItems: 'center',
   flex: 1,
-  overflowY: 'auto',
+  // overflowY: 'auto',
   overflowX: 'hidden',
   position: 'relative',
   [theme.breakpoints.down('md')]: {
@@ -55,16 +56,19 @@ export default function App() {
             <BodyWrapper id="body">
               <Popups />
               <Polling />
-              <WarningModal />
+              {/* <WarningModal /> */}
               <Web3ReactManager>
                 <Routes>
-                  <Route path="/test1" element={<ComingSoon />} />
-                  <Route path="/test2" element={<ComingSoon />} />
-                  <Route path="/" element={<ComingSoon />} />
+                  <Route path={routes.test1} element={<ComingSoon />} />
+                  <Route path={routes.test2} element={<ComingSoon />} />
+                  <Route path={routes.test3} element={<ComingSoon />}>
+                    <Route path={routes.test3 + routes.test3Desc} element={<ComingSoon />} />
+                  </Route>
+                  <Route path="*" element={<Navigate to={routes.test1} replace />} />
                 </Routes>
               </Web3ReactManager>
             </BodyWrapper>
-            <Footer />
+            {/* <Footer /> */}
           </ContentWrapper>
         </AppWrapper>
       </ModalProvider>{' '}
