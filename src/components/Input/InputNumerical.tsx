@@ -6,7 +6,7 @@ import InputLabel from './InputLabel'
 
 const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`) // match escaped "." characters via in a non-capturing group
 
-export default function NumericalInput({
+export default function InputNumerical({
   placeholder,
   onChange,
   maxWidth,
