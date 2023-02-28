@@ -55,6 +55,7 @@ export default function Select(props: Props) {
     defaultValue,
     placeholder,
     renderValue,
+    multiple,
     style
   } = props
   const theme = useTheme()
@@ -67,21 +68,35 @@ export default function Select(props: Props) {
           backgroundColor: primary ? theme.palette.primary.main : theme.palette.background.default,
           width: width || '100%',
           height: height || '60px',
+          padding: '0',
+          '& .MuiSelect-select': {
+            width: '100%',
+            maxWidth: 'calc(100vw - 70px)',
+            height: '100%',
+            padding: '0 50px 0 20px !important',
+            display: 'flex',
+            alignItems: 'center'
+          },
           '&:before': {
-            content: value || defaultValue ? "''" : `"${placeholder}"`,
+            content: value || defaultValue ? "''" : `"${placeholder || ''}"`,
             position: 'absolute',
             left: 24,
-            top: 10,
+            // top: 10,
             zIndex: 999,
+            color: theme.palette.text.secondary,
             fontSize: 16,
-            fontWeight: 400
-          },
-          '&:hover': {
-            backgroundColor: disabled ? theme.palette.background.paper : theme.palette.primary.main
+            fontWeight: '600!important'
           },
           '& .MuiSelect-icon': {
             display: disabled ? 'none' : 'block',
-            color: theme.palette.text.secondary
+            color: theme.palette.text.primary
+          },
+          '&:hover': {
+            color: disabled ? theme.palette.text.primary : theme.palette.common.white,
+            backgroundColor: disabled ? theme.palette.background.paper : theme.palette.primary.main,
+            '& .MuiSelect-icon': {
+              color: disabled ? theme.palette.text.primary : theme.palette.common.white
+            }
           },
           '& .Mui-disabled.MuiInputBase-input': {
             color: theme.palette.text.primary,
@@ -91,18 +106,18 @@ export default function Select(props: Props) {
         }}
         value={value}
         displayEmpty
+        multiple={multiple}
         disabled={disabled}
         MenuProps={{
           sx: {
             '& .MuiPaper-root': {
-              width: width ?? '100%',
+              width: width ?? 'unset',
               borderRadius: '10px',
-              mt: '20px',
+              mt: '10px',
               boxShadow: theme => theme.shadows[4],
               transform: width ? 'translateX(-12px)!important' : 'none',
               '& li': {
                 fontSize: 16,
-                fontWeight: 500,
                 borderBottom: '1px solid rgba(0,0,0,0.1)',
                 display: 'flex',
                 alignItems: 'center',
@@ -110,9 +125,6 @@ export default function Select(props: Props) {
                 '&.Mui-selected': {
                   backgroundColor: 'transparent'
                 }
-              },
-              '& li:hover': {
-                backgroundColor: theme => theme.palette.primary.light
               },
               '& li:last-child': {
                 borderBottom: 'none'
@@ -123,12 +135,15 @@ export default function Select(props: Props) {
                 alignItems: 'center',
                 gap: 8,
                 padding: 15,
-                '&.Mui-selected::after': {
-                  content: `url(${SelectedIcon})`,
+                '&::after': {
+                  content: multiple ? `url(${SelectedIcon})` : "''",
                   width: 30,
                   height: 20,
                   display: 'flex',
                   justifyContent: 'center'
+                },
+                '&.Mui-selected::after': {
+                  content: `url(${SelectedIcon})`
                 }
               }
             }
