@@ -161,3 +161,36 @@ export function getContract(address: string, ABI: any, library: Web3Provider, ac
 export function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
 }
+
+export function isURL(url: string) {
+  const strRegex = /(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?/
+  const re = new RegExp(strRegex)
+  return re.test(url)
+}
+
+export function isEmail(value: any): boolean {
+  return /^[A-Za-z\d]+([-_\.][A-Za-z\d]+)*@([A-Za-z\d]+[-\.])+[A-Za-z\d]{2,4}(,[A-Za-z\d]+([-_\.][A-Za-z\d]+)*@([A-Za-z\d]+[-\.])+[A-Za-z\d]{2,4})*$/.test(
+    value
+  )
+}
+
+export function isSocialUrl(name: 'discord' | 'twitter' | 'github' | 'opensea' | 'youtube' | 'url', url: string) {
+  switch (name) {
+    case 'discord':
+      return new RegExp(/^https:\/\/(www\.)?discord\.(com|gg)\//).test(url)
+    case 'twitter':
+      return new RegExp(/^https:\/\/(www\.)?twitter\.com\//).test(url)
+    case 'github':
+      return new RegExp(/^https:\/\/(www\.)?github\.com\//).test(url)
+    case 'opensea':
+      return new RegExp(/^https:\/\/(www\.)?opensea\.io\//).test(url)
+    case 'youtube':
+      return new RegExp(/^https:\/\/(www\.)?youtube\.com\//).test(url)
+    default:
+      return isURL(url)
+  }
+}
+
+export function getCurrentTimeStamp(date?: Date | string | number) {
+  return Number(((date ? new Date(date) : new Date()).getTime() / 1000).toFixed())
+}
