@@ -8,6 +8,7 @@ import { PortisConnector } from '@web3-react/portis-connector'
 import { FortmaticConnector } from './Fortmatic'
 import { NetworkConnector } from './NetworkConnector'
 import { SUPPORT_NETWORK_CHAIN_IDS, NETWORK_CHAIN_ID } from 'constants/chain'
+import { getRpcUrl } from './MultiNetworkConnector'
 
 const NETWORK_URL = process.env.REACT_APP_NETWORK_URL
 const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
@@ -33,13 +34,18 @@ export const injected = new InjectedConnector({
 // binance only
 export const binance = new BscConnector({ supportedChainIds: [56] })
 
+const walletConnectRpc: { [key in number]: string } = {}
+for (const id of SUPPORT_NETWORK_CHAIN_IDS) {
+  walletConnectRpc[id] = getRpcUrl(id)
+}
+
 // mainnet only
 export const walletconnect = new WalletConnectConnector({
-  rpc: { [NETWORK_CHAIN_ID]: NETWORK_URL },
+  rpc: walletConnectRpc,
+  supportedChainIds: SUPPORT_NETWORK_CHAIN_IDS,
   bridge: 'https://bridge.walletconnect.org',
-  qrcode: true,
-  supportedChainIds: SUPPORT_NETWORK_CHAIN_IDS
-  // pollingInterval: 15000
+  chainId: NETWORK_CHAIN_ID || undefined,
+  qrcode: true
 })
 
 // mainnet only

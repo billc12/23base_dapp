@@ -129,7 +129,7 @@ export const SUPPORTED_NETWORKS: {
   },
   [ChainId.BSC]: {
     chainId: getChainIdHex(ChainId.BSC),
-    chainName: 'Binance Smart Chain',
+    chainName: 'BNB Chain',
     nativeCurrency: {
       name: 'Binance Coin',
       symbol: 'BNB',
