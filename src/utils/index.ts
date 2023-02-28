@@ -5,7 +5,7 @@ import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
 import { CurrencyAmount, Percent } from '../constants/token/fractions'
 import JSBI from 'jsbi'
-import { ChainId } from '../constants/chain'
+import { ChainId, SUPPORTED_NETWORKS } from '../constants/chain'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -62,38 +62,24 @@ const explorers = {
 
 interface ChainObject {
   [chainId: number]: {
-    link: string
     builder: (chainName: string, data: string, type: 'transaction' | 'token' | 'address' | 'block') => string
   }
 }
 
 const chains: ChainObject = {
   [ChainId.MAINNET]: {
-    link: 'https://etherscan.io',
     builder: explorers.etherscan
   },
-  [ChainId.ROPSTEN]: {
-    link: 'https://ropsten.etherscan.io',
-    builder: explorers.etherscan
-  },
-  [ChainId.RINKEBY]: {
-    link: 'https://rinkeby.etherscan.io',
-    builder: explorers.etherscan
-  },
-  [ChainId.KOVAN]: {
-    link: 'https://kovan.etherscan.io',
+  [ChainId.SEPOLIA]: {
     builder: explorers.etherscan
   },
   [ChainId.GÖRLI]: {
-    link: 'https://gorli.etherscan.io',
     builder: explorers.etherscan
   },
   [ChainId.BSCTEST]: {
-    link: 'https://testnet.bscscan.com',
     builder: explorers.etherscan
   },
   [ChainId.BSC]: {
-    link: 'https://bscscan.com',
     builder: explorers.etherscan
   }
 }
@@ -103,8 +89,8 @@ export function getEtherscanLink(
   data: string,
   type: 'transaction' | 'token' | 'address' | 'block'
 ): string {
-  const chain = chains[chainId]
-  return chain.builder(chain.link, data, type)
+  const chain = chains[chainId] || explorers.etherscan
+  return chain.builder(SUPPORTED_NETWORKS[chainId]?.blockExplorerUrls?.[0].replace(/\/$/, '') || '', data, type)
 }
 
 // shorten the checksummed version of the input address to have 0x + 4 characters at start and end

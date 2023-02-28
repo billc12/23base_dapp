@@ -132,6 +132,20 @@ export default function WalletModal({
               icon={require('../../../assets/walletIcon/' + option.iconName)}
             />
           )
+        } else if (isMetamask && option.name === 'MetaMask') {
+          return (
+            <Option
+              onClick={() => {
+                option.connector !== connector && !option.href && tryActivation(option.connector)
+              }}
+              id={`connect-${key}`}
+              key={key}
+              active={option.connector && option.connector === connector}
+              link={option.href}
+              header={option.name}
+              icon={require('../../../assets/walletIcon/' + option.iconName)?.default}
+            />
+          )
         }
         return null
       }

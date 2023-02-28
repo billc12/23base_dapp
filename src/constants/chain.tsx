@@ -3,13 +3,16 @@ import { ReactComponent as ETH } from 'assets/svg/eth_logo.svg'
 import EthUrl from 'assets/svg/eth_logo.svg'
 import BSCUrl from 'assets/svg/binance.svg'
 import { ReactComponent as BSC } from 'assets/svg/binance.svg'
+import { BigNumber } from 'ethers'
+
+export function numberToHex(number: number) {
+  return BigNumber.from(number).toHexString()
+}
 
 export enum ChainId {
   MAINNET = 1,
-  ROPSTEN = 3,
-  RINKEBY = 4,
   GÖRLI = 5,
-  KOVAN = 42,
+  SEPOLIA = 11155111,
   BSC = 56,
   BSCTEST = 97
 }
@@ -22,59 +25,61 @@ export const SUPPORT_NETWORK_CHAIN_IDS: ChainId[] = process.env.REACT_APP_CHAIN_
   ? process.env.REACT_APP_CHAIN_IDS.split(',').map(v => Number(v) as ChainId)
   : [ChainId.BSC]
 
-export const IS_TEST_NET = !!(NETWORK_CHAIN_ID === ChainId.ROPSTEN)
-
 export const AllChainList = [
   {
     icon: <ETH />,
     logo: EthUrl,
-    symbol: 'Ropsten',
-    name: 'Ropsten Test Network',
-    id: ChainId.ROPSTEN,
-    hex: '0x3'
+    symbol: 'ETH',
+    name: 'ETH Mainnet',
+    id: ChainId.MAINNET,
+    hex: numberToHex(ChainId.MAINNET)
   },
   {
     icon: <ETH />,
     logo: EthUrl,
-    symbol: 'Rinkeby',
-    name: 'Rinkeby Testnet',
-    id: ChainId.RINKEBY,
-    hex: '0x4'
-  },
-  {
-    icon: <ETH />,
-    logo: EthUrl,
-    symbol: 'Kovan',
-    name: 'Kovan Testnet',
-    id: ChainId.KOVAN,
-    hex: '0x2a'
+    symbol: 'GÖRLI',
+    name: 'GÖRLI Testnet',
+    id: ChainId.GÖRLI,
+    hex: numberToHex(ChainId.GÖRLI)
   },
   {
     icon: <BSC height={20} width={20} />,
     logo: BSCUrl,
     symbol: 'BSC',
-    name: 'Binance Smart Chain',
+    name: 'BNB Chain',
     id: ChainId.BSC,
-    hex: '0x38'
+    hex: numberToHex(ChainId.BSC)
   },
   {
     icon: <BSC />,
     logo: BSCUrl,
     symbol: 'BSCTEST',
-    name: 'Binance Testnet',
+    name: 'BNB Testnet',
     id: ChainId.BSCTEST,
-    hex: '0x61'
+    hex: numberToHex(ChainId.BSCTEST)
+  },
+  {
+    icon: <ETH />,
+    logo: EthUrl,
+    symbol: 'Sepolia',
+    name: 'Sepolia',
+    id: ChainId.SEPOLIA,
+    hex: numberToHex(ChainId.SEPOLIA)
   }
 ]
 
 export const ChainList = AllChainList.filter(v => SUPPORT_NETWORK_CHAIN_IDS.includes(v.id))
 
 export const ChainListMap: {
-  [key: number]: { icon: JSX.Element; link?: string; selectedIcon?: JSX.Element } & Chain
+  [key in ChainId]?: { icon: JSX.Element; link?: string; selectedIcon?: JSX.Element } & Chain
 } = ChainList.reduce((acc, item) => {
   acc[item.id] = item
   return acc
 }, {} as any)
+
+function getChainIdHex(chainId: ChainId) {
+  return ChainListMap[chainId]?.hex || '0x1'
+}
 
 export const SUPPORTED_NETWORKS: {
   [chainId in ChainId]?: {
@@ -90,7 +95,7 @@ export const SUPPORTED_NETWORKS: {
   }
 } = {
   [ChainId.MAINNET]: {
-    chainId: '0x1',
+    chainId: getChainIdHex(ChainId.MAINNET),
     chainName: 'Ethereum',
     nativeCurrency: {
       name: 'Ethereum',
@@ -100,41 +105,30 @@ export const SUPPORTED_NETWORKS: {
     rpcUrls: ['https://mainnet.infura.io/v3'],
     blockExplorerUrls: ['https://etherscan.com']
   },
-  [ChainId.ROPSTEN]: {
-    chainId: '0x3',
-    chainName: 'Ropsten',
+  [ChainId.GÖRLI]: {
+    chainId: getChainIdHex(ChainId.GÖRLI),
+    chainName: 'GÖRLI Testnet',
     nativeCurrency: {
-      name: 'Ropsten',
+      name: 'Goerli',
       symbol: 'ETH',
       decimals: 18
     },
-    rpcUrls: ['https://ropsten.infura.io/v3/'],
-    blockExplorerUrls: ['https://ropsten.etherscan.io/']
+    rpcUrls: ['https://goerli.infura.io/v3/'],
+    blockExplorerUrls: ['https://goerli.etherscan.io/']
   },
-  [ChainId.RINKEBY]: {
-    chainId: '0x4',
-    chainName: 'Rinkeby',
+  [ChainId.SEPOLIA]: {
+    chainId: getChainIdHex(ChainId.SEPOLIA),
+    chainName: 'Sepolia Testnet',
     nativeCurrency: {
-      name: 'Rinkeby',
+      name: 'Sepolia',
       symbol: 'ETH',
       decimals: 18
     },
-    rpcUrls: ['https://rinkeby.infura.io/v3/'],
-    blockExplorerUrls: ['https://rinkeby.etherscan.io/']
-  },
-  [ChainId.KOVAN]: {
-    chainId: '0x2a',
-    chainName: 'Kovan',
-    nativeCurrency: {
-      name: 'Kovan',
-      symbol: 'ETH',
-      decimals: 18
-    },
-    rpcUrls: ['https://kovan.infura.io/v3/'],
-    blockExplorerUrls: ['https://kovan.etherscan.io/']
+    rpcUrls: ['https://sepolia.infura.io/v3/'],
+    blockExplorerUrls: ['https://sepolia.etherscan.io/']
   },
   [ChainId.BSC]: {
-    chainId: '0x38',
+    chainId: getChainIdHex(ChainId.BSC),
     chainName: 'Binance Smart Chain',
     nativeCurrency: {
       name: 'Binance Coin',
@@ -145,8 +139,8 @@ export const SUPPORTED_NETWORKS: {
     blockExplorerUrls: ['https://bscscan.com']
   },
   [ChainId.BSCTEST]: {
-    chainId: '0x61',
-    chainName: 'Binance TEST Chain',
+    chainId: getChainIdHex(ChainId.BSCTEST),
+    chainName: 'BNB Testnet',
     nativeCurrency: {
       name: 'Binance Coin',
       symbol: 'BNB',
