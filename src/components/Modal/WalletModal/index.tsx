@@ -18,6 +18,7 @@ import Option from './Option'
 import PendingView from './PendingView'
 import useBreakpoint from 'hooks/useBreakpoint'
 import { ChainId, NETWORK_CHAIN_ID, SUPPORTED_NETWORKS } from '../../../constants/chain'
+import { setInjectedConnected } from 'utils/isInjectedConnectedPrev'
 
 const WALLET_VIEWS = {
   OPTIONS: 'options',
@@ -87,14 +88,18 @@ export default function WalletModal({
       }
 
       conn &&
-        activate(conn, undefined, true).catch(error => {
-          if (error instanceof UnsupportedChainIdError) {
-            activate(conn) // a little janky...can't use setError because the connector isn't set
-          } else {
-            console.error(error)
-            setPendingError(true)
-          }
-        })
+        activate(conn, undefined, true)
+          .then(() => {
+            setInjectedConnected(conn)
+          })
+          .catch(error => {
+            if (error instanceof UnsupportedChainIdError) {
+              activate(conn) // a little janky...can't use setError because the connector isn't set
+            } else {
+              setPendingError(true)
+            }
+            setInjectedConnected()
+          })
     },
     [activate]
   )

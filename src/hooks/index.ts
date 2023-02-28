@@ -6,6 +6,7 @@ import { isMobile } from 'react-device-detect'
 import { injected } from '../connectors'
 import { NetworkContextName } from '../constants'
 import { ChainId } from '../constants/chain'
+import { isInjectedConnected } from 'utils/isInjectedConnectedPrev'
 
 export function useActiveWeb3React(): Web3ReactContextInterface<Web3Provider> & { chainId?: ChainId } {
   const context = useWeb3ReactCore<Web3Provider>()
@@ -18,6 +19,11 @@ export function useEagerConnect() {
   const [tried, setTried] = useState(false)
 
   useEffect(() => {
+    const isInjected = isInjectedConnected()
+    if (!isInjected) {
+      setTried(true)
+      return
+    }
     injected.isAuthorized().then(isAuthorized => {
       if (isAuthorized) {
         activate(injected, undefined, true).catch(() => {

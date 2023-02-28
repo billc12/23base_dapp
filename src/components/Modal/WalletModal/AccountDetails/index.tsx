@@ -10,6 +10,7 @@ import Transaction from './Transaction'
 import { SUPPORTED_WALLETS } from 'constants/index'
 import { injected, walletlink } from 'connectors/'
 import { OutlinedCard } from 'components/Card'
+import { setInjectedConnected } from 'utils/isInjectedConnectedPrev'
 
 const Dot = styled('span')({
   width: 24,
@@ -44,7 +45,7 @@ export default function AccountDetails({
   ENSName,
   openOptions
 }: AccountDetailsProps) {
-  const { chainId, account, connector } = useActiveWeb3React()
+  const { chainId, account, connector, deactivate } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
   const theme = useTheme()
 
@@ -79,12 +80,13 @@ export default function AccountDetails({
           color={theme.palette.text.secondary}
         >
           {formatConnectorName()}
-          {connector !== injected && connector !== walletlink && (
+          {connector !== walletlink && (
             <Button
               color="secondary"
-              style={{ marginRight: '8px' }}
+              sx={{ ml: '8px', width: 120, height: 30 }}
               onClick={() => {
-                console.log(connector?.deactivate.toString())
+                setInjectedConnected()
+                deactivate()
                 connector?.deactivate()
               }}
             >
