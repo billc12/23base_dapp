@@ -12,12 +12,19 @@ export interface SerializableTransactionReceipt {
   status?: number
 }
 
+export interface UserSubmittedProp {
+  account: string
+  action: string
+  key?: string
+}
+
 export const addTransaction = createAction<{
   chainId: ChainId
   hash: string
   from: string
   approval?: { tokenAddress: string; spender: string }
   claim?: { recipient: string }
+  userSubmitted?: UserSubmittedProp
   summary?: string
 }>('transactions/addTransaction')
 export const clearAllTransactions = createAction<{ chainId: ChainId }>('transactions/clearAllTransactions')

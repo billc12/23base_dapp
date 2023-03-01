@@ -4,13 +4,18 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
-import { addTransaction } from './actions'
+import { addTransaction, UserSubmittedProp } from './actions'
 import { TransactionDetails } from './reducer'
 
 // helper that can take a ethers library transaction response and add it to the list of transactions
 export function useTransactionAdder(): (
   response: TransactionResponse,
-  customData?: { summary?: string; approval?: { tokenAddress: string; spender: string }; claim?: { recipient: string } }
+  customData?: {
+    summary?: string
+    approval?: { tokenAddress: string; spender: string }
+    claim?: { recipient: string }
+    userSubmitted?: UserSubmittedProp
+  }
 ) => void {
   const { chainId, account } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
@@ -21,8 +26,14 @@ export function useTransactionAdder(): (
       {
         summary,
         approval,
+        userSubmitted,
         claim
-      }: { summary?: string; claim?: { recipient: string }; approval?: { tokenAddress: string; spender: string } } = {}
+      }: {
+        summary?: string
+        claim?: { recipient: string }
+        userSubmitted?: UserSubmittedProp
+        approval?: { tokenAddress: string; spender: string }
+      } = {}
     ) => {
       if (!account) return
       if (!chainId) return
@@ -31,7 +42,7 @@ export function useTransactionAdder(): (
       if (!hash) {
         throw Error('No transaction hash found.')
       }
-      dispatch(addTransaction({ hash, from: account, chainId, approval, summary, claim }))
+      dispatch(addTransaction({ hash, from: account, chainId, approval, summary, claim, userSubmitted }))
     },
     [dispatch, chainId, account]
   )
@@ -102,4 +113,48 @@ export function useUserHasSubmittedClaim(account?: string): {
   }, [account, allTransactions])
 
   return { claimSubmitted: Boolean(claimTxn), claimTxn }
+}
+
+export function useUserHasSubmittedRecords(
+  account?: string,
+  action?: string,
+  key?: string
+): {
+  submitted: boolean
+  txn: TransactionDetails | undefined
+  complete: boolean
+} {
+  const allTransactions = useAllTransactions()
+
+  // get the txn if it has been submitted
+  const txn = useMemo(() => {
+    const txnIndex = Object.keys(allTransactions).find(hash => {
+      const tx = allTransactions[hash]
+      return (
+        tx.userSubmitted &&
+        tx.userSubmitted.account.toLowerCase() === account?.toLowerCase() &&
+        tx.userSubmitted.action === action &&
+        tx.userSubmitted.key === key &&
+        !tx.receipt &&
+        isTransactionRecent(tx)
+      )
+    })
+    return txnIndex && allTransactions[txnIndex] ? allTransactions[txnIndex] : undefined
+  }, [account, action, allTransactions, key])
+
+  const complete = useMemo(() => {
+    const txnIndex = Object.keys(allTransactions).find(hash => {
+      const tx = allTransactions[hash]
+      return (
+        tx.userSubmitted &&
+        tx.userSubmitted.account.toLowerCase() === account?.toLowerCase() &&
+        tx.userSubmitted.action === action &&
+        tx.userSubmitted.key === key &&
+        tx.receipt
+      )
+    })
+    return txnIndex && allTransactions[txnIndex] ? allTransactions[txnIndex] : undefined
+  }, [account, action, allTransactions, key])
+
+  return { submitted: Boolean(txn), complete: Boolean(complete), txn }
 }
