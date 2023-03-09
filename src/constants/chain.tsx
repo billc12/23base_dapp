@@ -3,10 +3,10 @@ import { ReactComponent as ETH } from 'assets/svg/eth_logo.svg'
 import EthUrl from 'assets/svg/eth_logo.svg'
 import BSCUrl from 'assets/svg/binance.svg'
 import { ReactComponent as BSC } from 'assets/svg/binance.svg'
-import { BigNumber } from 'ethers'
+import BigNumberjs from 'bignumber.js'
 
 export function numberToHex(number: number) {
-  return BigNumber.from(number).toHexString()
+  return '0x' + new BigNumberjs(number).toString(16)
 }
 
 export enum ChainId {
