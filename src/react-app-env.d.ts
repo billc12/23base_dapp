@@ -7,7 +7,7 @@ interface Window {
     isMetaMask?: true
     on?: (...args: any[]) => void
     send: (...args: any[]) => void
-    request?: (...args: any[]) => void
+    request?: (...args: any[]) => any
     removeListener?: (...args: any[]) => void
   }
   web3?: {}

@@ -229,12 +229,21 @@ export default function WalletModal({
                   return
                 }
                 const params = SUPPORTED_NETWORKS[id as ChainId]
-                params?.nativeCurrency.symbol === 'ETH'
-                  ? window.ethereum?.request?.({
-                      method: 'wallet_switchEthereumChain',
-                      params: [{ chainId: params.chainId }, account]
-                    })
-                  : window.ethereum?.request?.({ method: 'wallet_addEthereumChain', params: [params, account] })
+                const obj: any = {}
+                obj.chainId = params?.hexChainId
+                obj.chainName = params?.chainName
+                obj.nativeCurrency = params?.nativeCurrency
+                obj.rpcUrls = params?.rpcUrls
+                obj.blockExplorerUrls = params?.blockExplorerUrls
+                window.ethereum
+                  ?.request?.({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: params.hexChainId }, account]
+                  })
+                  .catch((err: any) => {
+                    if (err?.code === 4001) return
+                    return window.ethereum?.request?.({ method: 'wallet_addEthereumChain', params: [obj, account] })
+                  })
               }}
             >
               Connect to{' '}

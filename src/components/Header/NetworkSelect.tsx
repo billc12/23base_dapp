@@ -2,21 +2,23 @@ import { MenuItem, Box } from '@mui/material'
 import LogoText from 'components/LogoText'
 import Select from 'components/Select/Select'
 import { useActiveWeb3React } from 'hooks'
-import { ChainId, ChainList, SUPPORTED_NETWORKS } from 'constants/chain'
+import { ChainList } from 'constants/chain'
 import useBreakpoint from 'hooks/useBreakpoint'
 import Image from 'components/Image'
+import { useSwitchNetwork } from 'hooks/useSwitchNetwork'
 
 export default function NetworkSelect() {
-  const { chainId, account, library } = useActiveWeb3React()
+  const { chainId, account } = useActiveWeb3React()
   const isDownSm = useBreakpoint('sm')
+  const switchNetwork = useSwitchNetwork()
 
   if (!chainId || !account) return null
 
   return (
     <Box sx={{ width: '130', margin: { xs: '0', sm: '8px 0 15px' } }}>
       <Select
-        defaultValue={chainId ?? 3}
-        value={chainId ?? 3}
+        defaultValue={chainId ?? undefined}
+        value={chainId ?? undefined}
         width="max-content"
         height={isDownSm ? '24px' : '36px'}
         style={{
@@ -32,15 +34,7 @@ export default function NetworkSelect() {
         {ChainList.map(option => (
           <MenuItem
             onClick={() => {
-              if (Object.values(ChainId).includes(option.id)) {
-                library?.provider?.request?.({
-                  method: 'wallet_switchEthereumChain',
-                  params: [{ chainId: SUPPORTED_NETWORKS[option.id as ChainId]?.chainId }, account]
-                })
-              } else {
-                const params = SUPPORTED_NETWORKS[option.id as ChainId]
-                library?.provider?.request?.({ method: 'wallet_addEthereumChain', params: [params, account] })
-              }
+              switchNetwork(option.id)
             }}
             value={option.id}
             key={option.id}
@@ -49,7 +43,7 @@ export default function NetworkSelect() {
             {isDownSm ? (
               <Image src={option.logo} style={{ height: 14, width: 'auto', margin: '5px 0 0' }} />
             ) : (
-              <LogoText logo={option.logo} text={option.symbol} gapSize={'small'} fontSize={14} />
+              <LogoText logo={option.logo} text={option.name} gapSize={'small'} fontSize={14} />
             )}
           </MenuItem>
         ))}
