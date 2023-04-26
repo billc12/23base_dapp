@@ -6,8 +6,7 @@ import { useTransactionAdder, useHasPendingApproval } from '../state/transaction
 import { calculateGasMargin } from '../utils'
 import { useTokenContract } from './useContract'
 import { useActiveWeb3React } from './index'
-import { CurrencyAmount, TokenAmount } from '../constants/token/fractions'
-import { ETHER } from '../constants/token'
+import { CurrencyAmount } from '../constants/token/fractions'
 
 export enum ApprovalState {
   UNKNOWN,
@@ -22,13 +21,13 @@ export function useApproveCallback(
   spender?: string
 ): [ApprovalState, () => Promise<void>] {
   const { account } = useActiveWeb3React()
-  const token = amountToApprove instanceof TokenAmount ? amountToApprove.token : undefined
+  const token = amountToApprove instanceof CurrencyAmount ? amountToApprove.currency : undefined
   const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
   const pendingApproval = useHasPendingApproval(token?.address, spender)
   // check the current approval status
   const approvalState: ApprovalState = useMemo(() => {
     if (!amountToApprove || !spender) return ApprovalState.UNKNOWN
-    if (amountToApprove.currency === ETHER) return ApprovalState.APPROVED
+    if (amountToApprove.currency.isNative) return ApprovalState.APPROVED
     // we might not have enough data to know whether or not we need to approve
     if (!currentAllowance) return ApprovalState.UNKNOWN
 
@@ -40,7 +39,7 @@ export function useApproveCallback(
       : ApprovalState.APPROVED
   }, [amountToApprove, currentAllowance, pendingApproval, spender])
 
-  const tokenContract = useTokenContract(token?.address)
+  const tokenContract = useTokenContract(!token?.isNative ? token?.address : undefined)
   const addTransaction = useTransactionAdder()
 
   const approve = useCallback(async (): Promise<void> => {

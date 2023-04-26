@@ -1,6 +1,7 @@
 import { ComponentMeta } from '@storybook/react'
 import CurrencyLogo from 'components/essential/CurrencyLogo'
-import { ETHER } from 'constants/token'
+import { ChainId } from 'constants/chain'
+import { Currency } from 'constants/token'
 
 export default {
   title: 'Essential/CurrencyLogo',
@@ -8,5 +9,6 @@ export default {
 } as ComponentMeta<typeof CurrencyLogo>
 
 export const Default = () => {
-  return <CurrencyLogo currency={ETHER} />
+  const token = Currency.getNativeCurrency(ChainId.MAINNET)
+  return <CurrencyLogo currency={token} />
 }

@@ -89,6 +89,7 @@ export const SUPPORTED_NETWORKS: {
       name: string
       symbol: string
       decimals: number
+      logo?: string
     }
     rpcUrls: string[]
     blockExplorerUrls: string[]
@@ -96,55 +97,60 @@ export const SUPPORTED_NETWORKS: {
 } = {
   [ChainId.MAINNET]: {
     chainId: getChainIdHex(ChainId.MAINNET),
-    chainName: 'Ethereum',
+    chainName: ChainListMap[ChainId.MAINNET]?.name || '',
     nativeCurrency: {
-      name: 'Ethereum',
+      name: 'ETH',
       symbol: 'ETH',
-      decimals: 18
+      decimals: 18,
+      logo: ChainListMap[ChainId.MAINNET]?.logo
     },
     rpcUrls: ['https://mainnet.infura.io/v3'],
     blockExplorerUrls: ['https://etherscan.com']
   },
   [ChainId.GÖRLI]: {
     chainId: getChainIdHex(ChainId.GÖRLI),
-    chainName: 'GÖRLI Testnet',
+    chainName: ChainListMap[ChainId.GÖRLI]?.name || '',
     nativeCurrency: {
-      name: 'Goerli',
+      name: 'GoerliETH',
       symbol: 'ETH',
-      decimals: 18
+      decimals: 18,
+      logo: ChainListMap[ChainId.GÖRLI]?.logo
     },
     rpcUrls: ['https://goerli.infura.io/v3/'],
     blockExplorerUrls: ['https://goerli.etherscan.io/']
   },
   [ChainId.SEPOLIA]: {
     chainId: getChainIdHex(ChainId.SEPOLIA),
-    chainName: 'Sepolia Testnet',
+    chainName: ChainListMap[ChainId.SEPOLIA]?.name || '',
     nativeCurrency: {
-      name: 'Sepolia',
+      name: 'SepoliaETH',
       symbol: 'ETH',
-      decimals: 18
+      decimals: 18,
+      logo: ChainListMap[ChainId.SEPOLIA]?.logo
     },
     rpcUrls: ['https://sepolia.infura.io/v3/'],
     blockExplorerUrls: ['https://sepolia.etherscan.io/']
   },
   [ChainId.BSC]: {
     chainId: getChainIdHex(ChainId.BSC),
-    chainName: 'BNB Chain',
+    chainName: ChainListMap[ChainId.BSC]?.name || '',
     nativeCurrency: {
       name: 'Binance Coin',
       symbol: 'BNB',
-      decimals: 18
+      decimals: 18,
+      logo: ChainListMap[ChainId.BSC]?.logo
     },
     rpcUrls: ['https://bsc-dataseed.binance.org'],
     blockExplorerUrls: ['https://bscscan.com']
   },
   [ChainId.BSCTEST]: {
     chainId: getChainIdHex(ChainId.BSCTEST),
-    chainName: 'BNB Testnet',
+    chainName: ChainListMap[ChainId.BSCTEST]?.name || '',
     nativeCurrency: {
       name: 'Binance Coin',
       symbol: 'BNB',
-      decimals: 18
+      decimals: 18,
+      logo: ChainListMap[ChainId.BSCTEST]?.logo
     },
     rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
     blockExplorerUrls: ['https://testnet.bscscan.com/']

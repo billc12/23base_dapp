@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react'
 import Logo from './LogoBase'
 import { Currency } from '../../../constants/token/currency'
-import { Token } from '../../../constants/token/token'
 
 export const getTokenLogoURL = (address: string) =>
   `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
@@ -16,8 +15,10 @@ export default function CurrencyLogo({
   style?: React.CSSProperties
 }) {
   const srcs: string[] = useMemo(() => {
-    if (currency instanceof Token) {
-      return [getTokenLogoURL(currency.address)]
+    if (currency?.logo) {
+      return [currency.logo]
+    } else if (!currency?.isNative) {
+      return [getTokenLogoURL(currency?.address || '')]
     }
     return []
   }, [currency])

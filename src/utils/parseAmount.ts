@@ -1,5 +1,5 @@
 import { parseUnits } from '@ethersproject/units'
-import { CurrencyAmount, Token, TokenAmount, Currency, ETHER } from 'constants/token'
+import { CurrencyAmount, Currency } from 'constants/token'
 import JSBI from 'jsbi'
 
 export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmount | undefined {
@@ -7,11 +7,16 @@ export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmo
     return undefined
   }
   try {
+    const str = value.split('.')
+    if (str.length === 2) {
+      value = `${str[0]}.${str[1].slice(0, currency.decimals)}`
+    }
     const typedValueParsed = parseUnits(value, currency.decimals).toString()
     if (typedValueParsed !== '0') {
-      return currency instanceof Token
-        ? new TokenAmount(currency, JSBI.BigInt(typedValueParsed))
-        : CurrencyAmount.ether(JSBI.BigInt(typedValueParsed))
+      return new CurrencyAmount(currency, JSBI.BigInt(typedValueParsed))
+      // return currency instanceof Currency
+      //   ? new CurrencyAmount(currency, JSBI.BigInt(typedValueParsed))
+      //   : CurrencyAmount.ether(JSBI.BigInt(typedValueParsed))
     }
   } catch (error) {
     // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
@@ -28,21 +33,12 @@ export const absolute = (val: string) => {
   return val
 }
 
-export const parseBalance = (val: string | undefined, token: Token, toSignificant = 6): string => {
+export const parseBalance = (val: string | undefined, token: Currency, toSignificant = 6): string => {
   const string = val?.toString()
-  const amount = new TokenAmount(token, JSBI.BigInt(absolute(string ?? ''))).toSignificant(toSignificant)
+  const amount = new CurrencyAmount(token, JSBI.BigInt(absolute(string ?? ''))).toSignificant(toSignificant)
   if (string && string[0] === '-') {
     return '-' + amount
   } else {
     return amount
   }
-}
-
-export const parsedGreaterThan = (userInput: string, balance: string) => {
-  if (userInput && balance) {
-    const v1 = tryParseAmount(userInput, ETHER)?.raw
-    const v2 = JSBI.BigInt(balance.toString())
-    return v1 && v2 ? JSBI.greaterThan(v1, v2) : undefined
-  }
-  return
 }

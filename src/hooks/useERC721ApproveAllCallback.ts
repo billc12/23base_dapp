@@ -6,7 +6,7 @@ import { Contract } from '@ethersproject/contracts'
 import { useSingleCallResult } from '../state/multicall/hooks'
 import { ApprovalState } from './useApproveCallback'
 import { useActiveWeb3React } from '.'
-import { useNFTContract } from './useContract'
+import { useERC721Contract } from './useContract'
 import useModal from './useModal'
 
 function useGetApproved(contract: Contract | undefined, spender: string | undefined) {
@@ -24,7 +24,7 @@ export function useERC721ApproveAllCallback(
 ): [ApprovalState, () => Promise<void>] {
   // const { account } = useActiveWeb3React()
   const { hideModal } = useModal()
-  const contract = useNFTContract(contractAddress)
+  const contract = useERC721Contract(contractAddress)
   const isApproved = useGetApproved(contract ?? undefined, spender)
   const pendingApproval = useHasPendingApproval(contract?.address, spender)
   // check the current approval status

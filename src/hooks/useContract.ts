@@ -48,19 +48,24 @@ function useContract(
   }, [ABI, account, address, chainId, library, queryChainId, withSignerIfPossible])
 }
 
-export function useV2MigratorContract(): Contract | null {
-  return useContract(MIGRATOR_ADDRESS, MIGRATOR_ABI, true)
+export function useV2MigratorContract(queryChainId?: ChainId): Contract | null {
+  return useContract(MIGRATOR_ADDRESS, MIGRATOR_ABI, true, queryChainId)
 }
 
-export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
-  return useContract(tokenAddress, ERC20_ABI, withSignerIfPossible)
+export function useTokenContract(
+  tokenAddress?: string,
+  withSignerIfPossible?: boolean,
+  queryChainId?: ChainId
+): Contract | null {
+  return useContract(tokenAddress, ERC20_ABI, withSignerIfPossible, queryChainId)
 }
 
-export function useENSRegistrarContract(withSignerIfPossible?: boolean): Contract | null {
+export function useENSRegistrarContract(withSignerIfPossible?: boolean, queryChainId?: ChainId): Contract | null {
   const { chainId } = useActiveWeb3React()
+  const curChainId = queryChainId || chainId
   let address: string | undefined
-  if (chainId) {
-    switch (chainId) {
+  if (curChainId) {
+    switch (curChainId) {
       case ChainId.MAINNET:
       case ChainId.GÖRLI:
       case ChainId.SEPOLIA:
@@ -68,15 +73,23 @@ export function useENSRegistrarContract(withSignerIfPossible?: boolean): Contrac
         break
     }
   }
-  return useContract(address, ENS_ABI, withSignerIfPossible)
+  return useContract(address, ENS_ABI, withSignerIfPossible, queryChainId)
 }
 
-export function useENSResolverContract(address: string | undefined, withSignerIfPossible?: boolean): Contract | null {
-  return useContract(address, ENS_PUBLIC_RESOLVER_ABI, withSignerIfPossible)
+export function useENSResolverContract(
+  address: string | undefined,
+  withSignerIfPossible?: boolean,
+  queryChainId?: ChainId
+): Contract | null {
+  return useContract(address, ENS_PUBLIC_RESOLVER_ABI, withSignerIfPossible, queryChainId)
 }
 
-export function useBytes32TokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
-  return useContract(tokenAddress, ERC20_BYTES32_ABI, withSignerIfPossible)
+export function useBytes32TokenContract(
+  tokenAddress?: string,
+  withSignerIfPossible?: boolean,
+  queryChainId?: ChainId
+): Contract | null {
+  return useContract(tokenAddress, ERC20_BYTES32_ABI, withSignerIfPossible, queryChainId)
 }
 
 export function useMulticallContract(queryChainId?: ChainId): Contract | null {
@@ -89,15 +102,16 @@ export function useMulticallContract(queryChainId?: ChainId): Contract | null {
   )
 }
 
-export function useSocksController(): Contract | null {
+export function useSocksController(queryChainId?: ChainId): Contract | null {
   const { chainId } = useActiveWeb3React()
   return useContract(
     chainId === ChainId.MAINNET ? '0x65770b5283117639760beA3F867b69b3697a91dd' : undefined,
     UNISOCKS_ABI,
-    false
+    false,
+    queryChainId
   )
 }
 
-export function useNFTContract(address: string | undefined): Contract | null {
-  return useContract(address, ERC721_ABI, true)
+export function useERC721Contract(address: string | undefined, queryChainId?: ChainId): Contract | null {
+  return useContract(address, ERC721_ABI, true, queryChainId)
 }

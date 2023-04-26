@@ -1,5 +1,5 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import { Token } from './token'
+import { Currency } from './token'
 import { injected, walletconnect } from '../connectors'
 import JSBI from 'jsbi'
 import { ChainId } from './chain'
@@ -7,8 +7,8 @@ import { ChainId } from './chain'
 // used to ensure the user doesn't send so much ETH so they end up with <.01
 export const MIN_ETH: JSBI = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16)) // .01 ETH
 
-export const BAST_TOKEN: { [chainId in ChainId]?: Token } = {
-  [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D', 18, 'USDT', 'USDT')
+export const BAST_TOKEN: { [chainId in ChainId]?: Currency } = {
+  [ChainId.MAINNET]: new Currency(ChainId.MAINNET, '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D', 18, 'USDT', 'USDT')
 }
 
 export const autoConnectInjectedEveryone = false

@@ -9,20 +9,18 @@ import {
   NEVER_RELOAD,
   useSingleCallResult
 } from '../multicall/hooks'
-import { CurrencyAmount, TokenAmount } from '../../constants/token/fractions'
+import { CurrencyAmount } from '../../constants/token/fractions'
 import JSBI from 'jsbi'
-import { Currency, ETHER, Token } from '../../constants/token'
-import { BAST_TOKEN } from '../../constants'
+import { Currency } from '../../constants/token'
 import { ChainId } from 'constants/chain'
 import { arrayify, parseBytes32String } from 'ethers/lib/utils'
+import isZero from 'utils/isZero'
 
-/**
- * Returns a map of the given addresses to their eventually consistent ETH balances.
- */
-export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): {
-  [address: string]: CurrencyAmount | undefined
-} {
-  const multicallContract = useMulticallContract()
+export function useETHBalances(
+  uncheckedAddresses?: (string | undefined)[],
+  chainId?: ChainId
+): { [address: string]: CurrencyAmount | undefined } {
+  const multicallContract = useMulticallContract(chainId)
 
   const addresses: string[] = useMemo(
     () =>
@@ -38,35 +36,55 @@ export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): {
   const results = useSingleContractMultipleData(
     multicallContract,
     'getEthBalance',
-    addresses.map(address => [address])
+    addresses.map(address => [address]),
+    undefined,
+    chainId
   )
 
   return useMemo(
     () =>
       addresses.reduce<{ [address: string]: CurrencyAmount }>((memo, address, i) => {
         const value = results?.[i]?.result?.[0]
-        if (value) memo[address] = CurrencyAmount.ether(JSBI.BigInt(value.toString()))
+        if (value)
+          memo[address] = CurrencyAmount.fromRawAmount(
+            Currency.getNativeCurrency(chainId),
+            JSBI.BigInt(value.toString())
+          )
         return memo
       }, {}),
-    [addresses, results]
+    [addresses, chainId, results]
   )
+}
+
+function useETHBalance(uncheckedAddress?: string | undefined, chainId?: ChainId): CurrencyAmount | undefined {
+  const ETHBalances = useETHBalances([uncheckedAddress], chainId)
+
+  return useMemo(() => (uncheckedAddress ? ETHBalances[uncheckedAddress] : undefined), [ETHBalances, uncheckedAddress])
 }
 
 /**
  * Returns a map of token addresses to their eventually consistent token balances for a single account.
  */
-export function useTokenBalancesWithLoadingIndicator(
+function useTokenBalancesWithLoadingIndicator(
   address?: string,
-  tokens?: (Token | undefined)[]
-): [{ [tokenAddress: string]: TokenAmount | undefined }, boolean] {
-  const validatedTokens: Token[] = useMemo(
-    () => tokens?.filter((t?: Token): t is Token => isAddress(t?.address) !== false) ?? [],
+  tokens?: (Currency | undefined)[],
+  chainId?: ChainId
+): [{ [tokenAddress: string]: CurrencyAmount | undefined }, boolean] {
+  const validatedTokens: Currency[] = useMemo(
+    () => tokens?.filter((t?: Currency): t is Currency => isAddress(t?.address) !== false && !t?.isNative) ?? [],
     [tokens]
   )
 
   const validatedTokenAddresses = useMemo(() => validatedTokens.map(vt => vt.address), [validatedTokens])
 
-  const balances = useMultipleContractSingleData(validatedTokenAddresses, ERC20_INTERFACE, 'balanceOf', [address])
+  const balances = useMultipleContractSingleData(
+    validatedTokenAddresses,
+    ERC20_INTERFACE,
+    'balanceOf',
+    [address],
+    undefined,
+    chainId
+  )
 
   const anyLoading: boolean = useMemo(() => balances.some(callState => callState.loading), [balances])
 
@@ -74,11 +92,11 @@ export function useTokenBalancesWithLoadingIndicator(
     useMemo(
       () =>
         address && validatedTokens.length > 0
-          ? validatedTokens.reduce<{ [tokenAddress: string]: TokenAmount | undefined }>((memo, token, i) => {
+          ? validatedTokens.reduce<{ [tokenAddress: string]: CurrencyAmount | undefined }>((memo, token, i) => {
               const value = balances?.[i]?.result?.[0]
               const amount = value ? JSBI.BigInt(value.toString()) : undefined
               if (amount) {
-                memo[token.address] = new TokenAmount(token, amount)
+                memo[token.address] = new CurrencyAmount(token, amount)
               }
               return memo
             }, {})
@@ -89,59 +107,38 @@ export function useTokenBalancesWithLoadingIndicator(
   ]
 }
 
-export function useTokenBalances(
-  address?: string,
-  tokens?: (Token | undefined)[]
-): { [tokenAddress: string]: TokenAmount | undefined } {
-  return useTokenBalancesWithLoadingIndicator(address, tokens)[0]
-}
-
-// get the balance for a single token/account combo
-export function useTokenBalance(account?: string, token?: Token): TokenAmount | undefined {
-  const tokenBalances = useTokenBalances(account, [token])
-  if (!token) return undefined
-  return tokenBalances[token.address]
-}
-
 export function useCurrencyBalances(
   account?: string,
-  currencies?: (Currency | undefined)[]
+  currencies?: (Currency | undefined)[],
+  chainId?: ChainId
 ): (CurrencyAmount | undefined)[] {
   const tokens = useMemo(
-    () => currencies?.filter((currency): currency is Token => currency instanceof Token) ?? [],
+    () => currencies?.map(currency => (currency && !currency?.isNative ? currency : undefined)) ?? [],
     [currencies]
   )
+  const eths = useMemo(() => currencies?.find(currency => currency && currency.isNative), [currencies])
 
-  const tokenBalances = useTokenBalances(account, tokens)
-  const containsETH: boolean = useMemo(() => currencies?.some(currency => currency === ETHER) ?? false, [currencies])
-  const ethBalance = useETHBalances(containsETH ? [account] : [])
+  const tokenBalances = useTokenBalancesWithLoadingIndicator(account, tokens, chainId)[0]
+
+  const ethBalance = useETHBalance(eths ? account : undefined, chainId)
 
   return useMemo(
     () =>
       currencies?.map(currency => {
         if (!account || !currency) return undefined
-        if (currency instanceof Token) return tokenBalances[currency.address]
-        if (currency === ETHER) return ethBalance[account]
-        return undefined
+        if (currency.isNative) return ethBalance
+        else return tokenBalances[currency.address]
       }) ?? [],
     [account, currencies, ethBalance, tokenBalances]
   )
 }
 
-export function useCurrencyBalance(account?: string, currency?: Currency): CurrencyAmount | undefined {
-  return useCurrencyBalances(account, [currency])[0]
-}
-
-export function useBaseTokenBalance(): TokenAmount | undefined {
-  const { account, chainId } = useActiveWeb3React()
-
-  const base = chainId ? BAST_TOKEN[chainId] : undefined
-
-  const baseBalance: TokenAmount | undefined = useTokenBalance(account ?? undefined, base)
-
-  if (!base) return undefined
-
-  return baseBalance
+export function useCurrencyBalance(
+  account?: string,
+  currency?: Currency,
+  chainId?: ChainId
+): CurrencyAmount | undefined {
+  return useCurrencyBalances(account, [currency], chainId)[0]
 }
 
 // parse a name or symbol from a token response
@@ -156,14 +153,14 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
     : defaultValue
 }
 
-export function useToken(tokenAddress: string, chainId?: ChainId): Token | undefined | null {
+export function useToken(tokenAddress: string, chainId?: ChainId): Currency | undefined | null {
   const { chainId: linkChainId } = useActiveWeb3React()
   const curChainId = chainId || linkChainId
 
-  const address = isAddress(tokenAddress)
+  const address = isZero(tokenAddress) ? '' : isAddress(tokenAddress)
 
-  const tokenContract = useTokenContract(address ? address : undefined, false)
-  const tokenContractBytes32 = useBytes32TokenContract(address ? address : undefined, false)
+  const tokenContract = useTokenContract(address ? address : undefined, false, curChainId)
+  const tokenContractBytes32 = useBytes32TokenContract(address ? address : undefined, false, curChainId)
 
   const tokenName = useSingleCallResult(tokenContract, 'name', undefined, NEVER_RELOAD, curChainId)
   const tokenNameBytes32 = useSingleCallResult(tokenContractBytes32, 'name', undefined, NEVER_RELOAD, curChainId)
@@ -173,9 +170,10 @@ export function useToken(tokenAddress: string, chainId?: ChainId): Token | undef
 
   return useMemo(() => {
     if (!curChainId || !address) return undefined
+    if (address && isZero(address)) return undefined
     if (decimals.loading || symbol.loading || tokenName.loading) return null
     if (decimals.result) {
-      return new Token(
+      return new Currency(
         curChainId,
         address,
         decimals.result[0],
@@ -196,4 +194,51 @@ export function useToken(tokenAddress: string, chainId?: ChainId): Token | undef
     tokenName.result,
     tokenNameBytes32.result
   ])
+}
+
+export function useTokens(
+  tokenAddress: (string | undefined)[],
+  chainId?: ChainId
+): undefined | (Currency | undefined)[] {
+  const { chainId: linkChainId } = useActiveWeb3React()
+  const curChainId = chainId || linkChainId
+
+  const tokenNames = useMultipleContractSingleData(
+    tokenAddress,
+    ERC20_INTERFACE,
+    'name',
+    undefined,
+    NEVER_RELOAD,
+    curChainId
+  )
+  const symbols = useMultipleContractSingleData(
+    tokenAddress,
+    ERC20_INTERFACE,
+    'symbol',
+    undefined,
+    NEVER_RELOAD,
+    curChainId
+  )
+  const decimalss = useMultipleContractSingleData(
+    tokenAddress,
+    ERC20_INTERFACE,
+    'decimals',
+    undefined,
+    NEVER_RELOAD,
+    curChainId
+  )
+
+  return useMemo(() => {
+    if (!tokenAddress.length || !curChainId) return undefined
+    if (!tokenNames.length || !symbols.length || !decimalss.length) return undefined
+    if (tokenNames[0].loading || symbols[0].loading || decimalss[0].loading) return undefined
+    return tokenAddress.map((address, index) => {
+      const symbol = symbols[index].result
+      const tokenName = tokenNames[index].result
+      const decimal = decimalss[index].result
+      if (!symbol || !tokenName || !decimal || !address) return undefined
+
+      return new Currency(curChainId, address, decimal[0], symbol[0], tokenName[0])
+    })
+  }, [curChainId, decimalss, symbols, tokenAddress, tokenNames])
 }
