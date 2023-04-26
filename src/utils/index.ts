@@ -57,6 +57,48 @@ const explorers = {
       default:
         return `${link}/${type}/${data}`
     }
+  },
+  moonriver: (link: string, data: string, type: 'transaction' | 'token' | 'address' | 'block') => {
+    switch (type) {
+      case 'transaction':
+        return `${link}/tx/${data}`
+      case 'token':
+        return `${link}/tokens/${data}`
+      default:
+        return `${link}/${type}/${data}`
+    }
+  },
+  fuse: (link: string, data: string, type: 'transaction' | 'token' | 'address' | 'block') => {
+    switch (type) {
+      case 'transaction':
+        return `${link}/tx/${data}`
+      case 'token':
+        return `${link}/tokens/${data}`
+      default:
+        return `${link}/${type}/${data}`
+    }
+  },
+  telos: (link: string, data: string, type: 'transaction' | 'token' | 'address' | 'block') => {
+    switch (type) {
+      case 'transaction':
+        return `${link}/transaction/${data}`
+      case 'token':
+        return `${link}/address/${data}`
+      case 'address':
+        return `${link}/address/${data}`
+      default:
+        return `${link}/${type}/${data}`
+    }
+  },
+  moonbeam: (link: string, data: string, type: 'transaction' | 'token' | 'address' | 'block') => {
+    switch (type) {
+      case 'transaction':
+        return `${link}/tx/${data}`
+      case 'token':
+        return `${link}/tokens/${data}`
+      default:
+        return `${link}/${type}/${data}`
+    }
   }
 }
 
@@ -66,21 +108,28 @@ interface ChainObject {
   }
 }
 
+// Configure special
 const chains: ChainObject = {
-  [ChainId.MAINNET]: {
-    builder: explorers.etherscan
+  [100]: {
+    builder: explorers.blockscout
   },
-  [ChainId.SEPOLIA]: {
-    builder: explorers.etherscan
+  [43114]: {
+    builder: explorers.blockscout
   },
-  [ChainId.GÖRLI]: {
-    builder: explorers.etherscan
+  [1666600000]: {
+    builder: explorers.harmony
   },
-  [ChainId.BSCTEST]: {
-    builder: explorers.etherscan
+  [66]: {
+    builder: explorers.okex
   },
-  [ChainId.BSC]: {
-    builder: explorers.etherscan
+  [1285]: {
+    builder: explorers.moonriver
+  },
+  [1284]: {
+    builder: explorers.moonbeam
+  },
+  [2222]: {
+    builder: explorers.blockscout
   }
 }
 
@@ -89,15 +138,16 @@ export function getEtherscanLink(
   data: string,
   type: 'transaction' | 'token' | 'address' | 'block'
 ): string {
-  const chain = chains[chainId] || explorers.etherscan
-  return chain.builder(SUPPORTED_NETWORKS[chainId]?.blockExplorerUrls?.[0].replace(/\/$/, '') || '', data, type)
+  const builder = chains[chainId]?.builder || explorers.etherscan
+  return builder(SUPPORTED_NETWORKS[chainId]?.blockExplorerUrls?.[0].replace(/\/$/, '') || '', data, type)
 }
 
 // shorten the checksummed version of the input address to have 0x + 4 characters at start and end
 export function shortenAddress(address: string, chars = 4): string {
   const parsed = isAddress(address)
   if (!parsed) {
-    throw Error(`Invalid 'address' parameter '${address}'.`)
+    return ''
+    // throw Error(`Invalid 'address' parameter '${address}'.`)
   }
   return `${parsed.substring(0, chars + 2)}...${parsed.substring(42 - chars)}`
 }
@@ -155,7 +205,7 @@ export function isURL(url: string) {
 }
 
 export function isEmail(value: any): boolean {
-  return /^[A-Za-z\d]+([-_\.][A-Za-z\d]+)*@([A-Za-z\d]+[-\.])+[A-Za-z\d]{2,4}(,[A-Za-z\d]+([-_\.][A-Za-z\d]+)*@([A-Za-z\d]+[-\.])+[A-Za-z\d]{2,4})*$/.test(
+  return /^[A-Za-z\d]+([-_\.][A-Za-z\d]+)*@([A-Za-z\d]+[-\.])+[A-Za-z\d]{1,8}(,[A-Za-z\d]+([-_\.][A-Za-z\d]+)*@([A-Za-z\d]+[-\.])+[A-Za-z\d]{1,8})*$/.test(
     value
   )
 }
