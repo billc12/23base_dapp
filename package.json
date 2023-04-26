@@ -6,6 +6,7 @@
   "devDependencies": {
     "@babel/plugin-syntax-typescript": "^7.18.6",
     "@binance-chain/bsc-connector": "^1.0.0",
+    "@craco/craco": "^7.1.0",
     "@popperjs/core": "^2.11.5",
     "@reach/portal": "^0.17.0",
     "@reduxjs/toolkit": "^1.8.3",
@@ -52,7 +53,6 @@
     "prettier": "^2.7.1",
     "process": "^0.11.10",
     "react": "^18.2.0",
-    "react-app-rewired": "^2.2.1",
     "react-device-detect": "^2.2.2",
     "react-dom": "^18.2.0",
     "react-popper": "^2.3.0",
@@ -76,14 +76,16 @@
     "workbox-strategies": "^6.5.3"
   },
   "scripts": {
-    "start": "react-app-rewired start",
+    "start": "craco start",
     "start:service-worker": "yarn build && yarn serve -s build",
-    "build": "react-app-rewired build",
+    "build": "craco build",
     "build:test": "env-cmd -f ./.env.test.production yarn build",
-    "test": "react-app-rewired test --env=jsdom",
-    "eject": "react-app-rewired eject",
+    "test": "craco test --env=jsdom",
+    "eject": "craco eject",
     "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "lint": "eslint ./src/**/*.{ts,tsx}",
+    "lint:fix": "eslint --fix 'src/**/*.{js,jsx,ts,tsx,json}'"
   },
   "eslintConfig": {
     "extends": "react-app",
