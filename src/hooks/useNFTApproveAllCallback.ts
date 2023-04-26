@@ -18,7 +18,7 @@ function useGetApproved(contract: Contract | undefined, spender: string | undefi
   }, [res.loading, res.result])
 }
 
-export function useERC721ApproveAllCallback(
+export function useNFTApproveAllCallback(
   contractAddress: string | undefined,
   spender: string | undefined
 ): [ApprovalState, () => Promise<void>] {

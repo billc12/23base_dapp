@@ -7,6 +7,7 @@ interface Window {
     isMetaMask?: true
     on?: (...args: any[]) => void
     send: (...args: any[]) => void
+    ethereum: (...args: any) => void
     request?: (...args: any[]) => any
     removeListener?: (...args: any[]) => void
   }

@@ -12,6 +12,7 @@ import { useActiveWeb3React } from './index'
 import { ChainId } from '../constants/chain'
 import { getOtherNetworkLibrary } from 'connectors/MultiNetworkConnector'
 import ERC721_ABI from '../constants/abis/erc721.json'
+import ERC1155_ABI from '../constants/abis/erc1155.json'
 
 // returns null on errors
 function useContract(
@@ -114,4 +115,8 @@ export function useSocksController(queryChainId?: ChainId): Contract | null {
 
 export function useERC721Contract(address: string | undefined, queryChainId?: ChainId): Contract | null {
   return useContract(address, ERC721_ABI, true, queryChainId)
+}
+
+export function useERC1155Contract(address: string | undefined, queryChainId?: ChainId): Contract | null {
+  return useContract(address, ERC1155_ABI, true, queryChainId)
 }
