@@ -13,7 +13,6 @@ import { useActiveWeb3React } from 'hooks'
 
 const ActionButton = styled(Button)(({ theme }) => ({
   fontSize: '14px',
-  marginBottom: 15,
   [theme.breakpoints.down('sm')]: {
     maxWidth: 320,
     width: '100%',
@@ -50,10 +49,7 @@ function Web3StatusInner() {
 
   if (account) {
     return (
-      <Box
-        sx={{ cursor: 'pointer', marginBottom: { xs: 0, sm: 15 }, mt: { xs: 0, sm: 8 } }}
-        onClick={toggleWalletModal}
-      >
+      <Box sx={{ cursor: 'pointer' }} onClick={toggleWalletModal}>
         <Box
           sx={{
             height: { xs: 24, sm: 36 },

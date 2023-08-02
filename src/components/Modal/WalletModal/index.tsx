@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Typography, Box, Button } from '@mui/material'
+import { Typography, Box, Button, Stack } from '@mui/material'
 import usePrevious from 'hooks/usePrevious'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useWalletModalToggle } from 'state/application/hooks'
@@ -148,9 +148,9 @@ export default function WalletModal({
       <>
         {walletView === WALLET_VIEWS.ACCOUNT && <Typography variant="h6">Connect to a wallet</Typography>}
 
-        <Box display="grid" gap="10px" width="100%" justifyContent="center">
+        <Stack width={'80%'} spacing={10}>
           {getOptions()}
-        </Box>
+        </Stack>
       </>
     )
   }
