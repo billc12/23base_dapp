@@ -1,7 +1,5 @@
 import { useMemo } from 'react'
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { useTheme, Box, styled, Typography, Button } from '@mui/material'
-import { NetworkContextName } from '../../constants'
 import useENSName from '../../hooks/useENSName'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
@@ -11,6 +9,7 @@ import WalletModal from 'components/Modal/WalletModal/index'
 import Spinner from 'components/Spinner'
 import { ReactComponent as Web3StatusIconSvg } from 'assets/svg/web3status_icon.svg'
 import useBreakpoint from 'hooks/useBreakpoint'
+import { useActiveWeb3React } from 'hooks'
 
 const ActionButton = styled(Button)(({ theme }) => ({
   fontSize: '14px',
@@ -36,7 +35,7 @@ function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
 }
 
 function Web3StatusInner() {
-  const { account, error } = useWeb3React()
+  const { account, errorNetwork } = useActiveWeb3React()
   const { ENSName } = useENSName(account ?? undefined)
   const allTransactions = useAllTransactions()
   const sortedRecentTransactions = useMemo(() => {
@@ -92,7 +91,7 @@ function Web3StatusInner() {
         </Box>
       </Box>
     )
-  } else if (error) {
+  } else if (errorNetwork) {
     return (
       <ActionButton
         sx={{
@@ -102,7 +101,7 @@ function Web3StatusInner() {
         }}
         onClick={toggleWalletModal}
       >
-        {error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error'}
+        Wrong Network
       </ActionButton>
     )
   } else {
@@ -122,8 +121,7 @@ function Web3StatusInner() {
 }
 
 export default function Web3Status() {
-  const { active, account } = useWeb3React()
-  const contextNetwork = useWeb3React(NetworkContextName)
+  const { account } = useActiveWeb3React()
 
   const { ENSName } = useENSName(account ?? undefined)
 
@@ -136,10 +134,6 @@ export default function Web3Status() {
 
   const pending = sortedRecentTransactions.filter(tx => !tx.receipt).map(tx => tx.hash)
   const confirmed = sortedRecentTransactions.filter(tx => tx.receipt).map(tx => tx.hash)
-
-  if (!contextNetwork.active && !active) {
-    return null
-  }
 
   return (
     <>

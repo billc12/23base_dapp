@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { styled } from '@mui/material'
-// import Header from '../components/Header'
+import Header from '../components/Header'
 import Polling from '../components/essential/Polling'
 import Popups from '../components/essential/Popups'
 // import WarningModal from '../components/Modal/WarningModal'
@@ -52,7 +52,7 @@ export default function App() {
       <ModalProvider>
         <AppWrapper id="app">
           <ContentWrapper>
-            {/* <Header /> */}
+            <Header />
             <BodyWrapper id="body">
               <ToastContainer />
               <Popups />

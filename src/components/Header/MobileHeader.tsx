@@ -22,8 +22,7 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
 
 const MainLogo = styled(NavLink)({
   '& img': {
-    width: 136,
-    height: 34.7
+    height: 50
   },
   '&:hover': {
     cursor: 'pointer'

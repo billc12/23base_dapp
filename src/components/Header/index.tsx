@@ -102,8 +102,7 @@ const Filler = styled('div')(({ theme }) => ({
 
 const MainLogo = styled(Link)(({ theme }) => ({
   '& img': {
-    width: 180.8,
-    height: 34.7
+    height: 50
   },
   '&:hover': {
     cursor: 'pointer'
@@ -125,13 +124,13 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { pathname } = useLocation()
 
-  const handleMobileMenueDismiss = useCallback(() => {
+  const handleMobileMenusDismiss = useCallback(() => {
     setMobileMenuOpen(false)
   }, [])
 
   return (
     <>
-      <MobileMenu isOpen={mobileMenuOpen} onDismiss={handleMobileMenueDismiss} />
+      <MobileMenu isOpen={mobileMenuOpen} onDismiss={handleMobileMenusDismiss} />
       <Filler />
       <StyledAppBar>
         <Box display="flex" alignItems="center">

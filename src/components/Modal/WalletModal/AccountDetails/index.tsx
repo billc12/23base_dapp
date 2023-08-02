@@ -7,10 +7,9 @@ import { clearAllTransactions } from 'state/transactions/actions'
 import { shortenAddress } from 'utils/'
 import Copy from 'components/essential/Copy'
 import Transaction from './Transaction'
-import { SUPPORTED_WALLETS } from 'constants/index'
-import { injected, walletlink } from 'connectors/'
 import { OutlinedCard } from 'components/Card'
-import { setInjectedConnected } from 'utils/isInjectedConnectedPrev'
+import { useAppSelector } from 'state/hooks'
+import { getConnection } from 'connection'
 
 const Dot = styled('span')({
   width: 24,
@@ -47,20 +46,15 @@ export default function AccountDetails({
 }: AccountDetailsProps) {
   const { chainId, account, connector, deactivate } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
+  const selectedWallet = useAppSelector(state => state.userWallet.selectedWallet)
+  const curConnection = selectedWallet ? getConnection(selectedWallet) : undefined
+
   const theme = useTheme()
 
   function formatConnectorName() {
-    const { ethereum } = window
-    const isMetaMask = !!(ethereum && ethereum.isMetaMask)
-    const name = Object.keys(SUPPORTED_WALLETS)
-      .filter(
-        k =>
-          SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK'))
-      )
-      .map(k => SUPPORTED_WALLETS[k].name)[0]
     return (
       <Typography fontSize="0.825rem" fontWeight={500}>
-        Connected with {name}
+        Connected with {curConnection?.getName()}
       </Typography>
     )
   }
@@ -80,19 +74,15 @@ export default function AccountDetails({
           color={theme.palette.text.secondary}
         >
           {formatConnectorName()}
-          {connector !== walletlink && (
-            <Button
-              color="secondary"
-              sx={{ ml: '8px', width: 120, height: 30 }}
-              onClick={() => {
-                setInjectedConnected()
-                deactivate()
-                connector?.deactivate()
-              }}
-            >
-              Disconnect
-            </Button>
-          )}
+          <Button
+            color="secondary"
+            sx={{ ml: '8px', width: 120, height: 30 }}
+            onClick={() => {
+              deactivate()
+            }}
+          >
+            Disconnect
+          </Button>
         </Box>
 
         <Box
