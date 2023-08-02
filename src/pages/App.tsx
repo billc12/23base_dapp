@@ -1,14 +1,14 @@
 import { Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { styled } from '@mui/material'
-import Header from '../components/Header'
+// import Header from '../components/Header'
 import Polling from '../components/essential/Polling'
 import Popups from '../components/essential/Popups'
-import Web3ReactManager from '../components/essential/Web3ReactManager'
 // import WarningModal from '../components/Modal/WarningModal'
 import ComingSoon from './ComingSoon'
 import { ModalProvider } from 'context/ModalContext'
 import { routes } from 'constants/routes'
+import { ToastContainer } from 'react-toastify'
 // import Footer from 'components/Footer'
 
 const AppWrapper = styled('div')(({ theme }) => ({
@@ -52,21 +52,20 @@ export default function App() {
       <ModalProvider>
         <AppWrapper id="app">
           <ContentWrapper>
-            <Header />
+            {/* <Header /> */}
             <BodyWrapper id="body">
+              <ToastContainer />
               <Popups />
               <Polling />
               {/* <WarningModal /> */}
-              <Web3ReactManager>
-                <Routes>
-                  <Route path={routes.test1} element={<ComingSoon />} />
-                  <Route path={routes.test2} element={<ComingSoon />} />
-                  <Route path={routes.test3} element={<ComingSoon />}>
-                    <Route path={routes.test3 + routes.test3Desc} element={<ComingSoon />} />
-                  </Route>
-                  <Route path="*" element={<Navigate to={routes.test1} replace />} />
-                </Routes>
-              </Web3ReactManager>
+              <Routes>
+                <Route path={routes.test1} element={<ComingSoon />} />
+                <Route path={routes.test2} element={<ComingSoon />} />
+                <Route path={routes.test3} element={<ComingSoon />}>
+                  <Route path={routes.test3 + routes.test3Desc} element={<ComingSoon />} />
+                </Route>
+                <Route path="*" element={<Navigate to={routes.test1} replace />} />
+              </Routes>
             </BodyWrapper>
             {/* <Footer /> */}
           </ContentWrapper>

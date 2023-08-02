@@ -10,9 +10,9 @@ import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
 import { ChainId } from '../constants/chain'
-import { getOtherNetworkLibrary } from 'connectors/MultiNetworkConnector'
 import ERC721_ABI from '../constants/abis/erc721.json'
 import ERC1155_ABI from '../constants/abis/erc1155.json'
+import { getOtherNetworkLibrary } from 'connection/MultiNetworkConnector'
 
 // returns null on errors
 function useContract(
