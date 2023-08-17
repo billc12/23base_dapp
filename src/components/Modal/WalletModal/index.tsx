@@ -11,6 +11,7 @@ import useBreakpoint from 'hooks/useBreakpoint'
 import { ChainId, NETWORK_CHAIN_ID, SUPPORTED_NETWORKS } from '../../../constants/chain'
 import { useActiveWeb3React } from 'hooks'
 import { getConnections } from 'connection'
+import { triggerSwitchChain } from 'utils/triggerSwitchChain'
 
 const WALLET_VIEWS = {
   OPTIONS: 'options',
@@ -29,7 +30,7 @@ export default function WalletModal({
 }) {
   const isUpToMD = useBreakpoint('md')
   // important that these are destructed from the account-specific web3-react context
-  const { active, account, connector, errorNetwork } = useActiveWeb3React()
+  const { active, account, connector, library, errorNetwork } = useActiveWeb3React()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
 
@@ -90,7 +91,7 @@ export default function WalletModal({
   }
 
   function getModalContent() {
-    if (errorNetwork) {
+    if (active && library && errorNetwork) {
       return (
         <>
           <Typography variant="h6">Wrong Network</Typography>
@@ -101,35 +102,17 @@ export default function WalletModal({
                 : 'Binance Smart Chain'
             }.`}
           </Box>
-          {window.ethereum && window.ethereum.isMetaMask && (
-            <Button
-              onClick={() => {
-                const id = Object.values(ChainId).find(val => val === NETWORK_CHAIN_ID)
-                if (!id) {
-                  return
-                }
-                const params = SUPPORTED_NETWORKS[id as ChainId]
-                const obj: any = {}
-                obj.chainId = params?.hexChainId
-                obj.chainName = params?.chainName
-                obj.nativeCurrency = params?.nativeCurrency
-                obj.rpcUrls = params?.rpcUrls
-                obj.blockExplorerUrls = params?.blockExplorerUrls
-                window.ethereum
-                  ?.request?.({
-                    method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: params.hexChainId }, account]
-                  })
-                  .catch((err: any) => {
-                    if (err?.code === 4001) return
-                    return window.ethereum?.request?.({ method: 'wallet_addEthereumChain', params: [obj, account] })
-                  })
-              }}
-            >
-              Connect to{' '}
-              {SUPPORTED_NETWORKS[NETWORK_CHAIN_ID] ? SUPPORTED_NETWORKS[NETWORK_CHAIN_ID]?.chainName : 'BSC'}
-            </Button>
-          )}
+          <Button
+            onClick={() => {
+              const id = Object.values(ChainId).find(val => val === NETWORK_CHAIN_ID)
+              if (!id) {
+                return
+              }
+              triggerSwitchChain(library, id as ChainId, '')
+            }}
+          >
+            Connect to {SUPPORTED_NETWORKS[NETWORK_CHAIN_ID] ? SUPPORTED_NETWORKS[NETWORK_CHAIN_ID]?.chainName : 'BSC'}
+          </Button>
         </>
       )
     }

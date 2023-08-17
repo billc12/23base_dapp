@@ -32,7 +32,7 @@ export function useActiveWeb3React(): {
       connector: connector,
       provider: provider,
       library: provider,
-      active: !!account,
+      active: !!_account,
       deactivate,
       errorNetwork: chainId === undefined ? undefined : !isSupportedChain(chainId)
     }
